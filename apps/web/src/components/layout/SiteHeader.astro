@@ -25,7 +25,7 @@ const navItems = [
 
 <header
   id="site-header"
-  class="sticky top-0 z-40 w-full border-b border-transparent transition-all duration-[var(--ph-duration-ui)] ease-[var(--ph-ease)]"
+  class="sticky top-0 z-40 w-full border-b border-transparent transition-all duration-300 ease-[var(--ph-ease)]"
 >
   <nav class="container-ph flex h-16 items-center justify-between lg:h-[4.5rem]">
     <!-- Logo -->
@@ -161,15 +161,37 @@ const navItems = [
   const icon = document.getElementById("hamburger-icon");
   let open = false;
 
-  // Solid header on scroll
+  // Hide header on scroll up, show on scroll down + glass effect
+  let lastY = 0;
+  let ticking = false;
+
   const updateHeader = () => {
     if (!header) return;
-    const scrolled = window.scrollY > 20;
+    const y = window.scrollY;
+    const scrolled = y > 20;
+    const scrollingDown = y > lastY && y > 80;
+
     header.classList.toggle("glass", scrolled);
     header.classList.toggle("border-[var(--ph-border)]", scrolled);
     header.classList.toggle("border-transparent", !scrolled);
+
+    // Hide on scroll down, show on scroll up (standard behavior)
+    if (scrollingDown && !open) {
+      header.style.transform = "translateY(-100%)";
+    } else {
+      header.style.transform = "translateY(0)";
+    }
+
+    lastY = y;
+    ticking = false;
   };
-  window.addEventListener("scroll", updateHeader, { passive: true });
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  }, { passive: true });
   updateHeader();
 
   // Mobile menu
