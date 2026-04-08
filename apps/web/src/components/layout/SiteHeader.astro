@@ -16,8 +16,8 @@ const navItems = [
 ];
 ---
 
-<!-- Top bar — phase announcement -->
-<div class="relative z-50 bg-[var(--ph-forest)] text-center">
+<!-- Top bar — phase announcement (hidden on mobile) -->
+<div class="relative z-50 hidden bg-[var(--ph-forest)] text-center md:block">
   <p class="py-2 text-[0.8125rem] font-medium tracking-wide text-white/90">
     {i.phaseBadge}
   </p>
@@ -103,16 +103,35 @@ const navItems = [
 <!-- Mobile fullscreen menu -->
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-30 flex translate-x-full flex-col bg-[var(--ph-bg)] transition-transform duration-500 ease-[var(--ph-ease)] lg:hidden"
+  class="fixed inset-0 z-50 flex translate-x-full flex-col bg-[var(--ph-bg)] transition-transform duration-500 ease-[var(--ph-ease)] lg:hidden"
   aria-hidden="true"
 >
+  {/* Top bar — logo + close */}
+  <div class="flex h-16 shrink-0 items-center justify-between px-8">
+    <a href="/" class="flex items-center gap-2.5">
+      <img src="/images/client/ph-6.jpg" alt="Polish Hill" class="h-9 w-9 rounded-[var(--ph-radius-sm)] object-cover" />
+      <span class="text-[1.1rem] font-semibold tracking-tight" style="font-family: var(--font-display);">
+        Polish Hill
+      </span>
+    </a>
+    <button
+      id="mobile-menu-close"
+      class="flex h-10 w-10 items-center justify-center rounded-[var(--ph-radius-md)] transition-colors hover:bg-[var(--ph-ink)]/[0.05]"
+      aria-label="Закрити меню"
+    >
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
   <div class="flex flex-1 flex-col justify-center px-8">
-    <ul class="flex flex-col gap-2" role="list">
+    <ul class="flex flex-col gap-1" role="list">
       {navItems.map(({ label, href }, idx) => (
         <li>
           <a
             href={href}
-            class="block py-3 text-[2rem] font-medium tracking-tight text-[var(--ph-ink)] transition-all duration-500"
+            class="block py-3 text-[1.75rem] font-medium tracking-tight text-[var(--ph-ink)] transition-all duration-500"
             style={`font-family: var(--font-display); transition-delay: ${idx * 60}ms;`}
           >
             {label}
@@ -121,7 +140,7 @@ const navItems = [
       ))}
     </ul>
 
-    <div class="mt-12 flex flex-col gap-4">
+    <div class="mt-10 flex flex-col gap-4">
       <a
         href="tel:+380674406070"
         class="text-lg font-semibold text-[var(--ph-ink)]"
@@ -193,6 +212,9 @@ const navItems = [
       lines[2].style.transform = "";
     }
   }
+
+  // Close button inside mobile menu
+  document.getElementById("mobile-menu-close")?.addEventListener("click", () => closeMobileMenu());
 
   // Close mobile menu on anchor link click
   menu?.querySelectorAll("a[href^='#']").forEach((link) => {
