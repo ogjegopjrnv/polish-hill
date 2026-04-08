@@ -1,0 +1,70 @@
+---
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+---
+
+<section id="about" class="section bg-[var(--ph-surface)]">
+  <div class="container-ph">
+    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+      <!-- Image -->
+      <div class="reveal">
+        <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-lg)]">
+          <img
+            src="/images/client/ph-14.jpg"
+            alt={locale === "uk" ? "Котеджне містечко Polish Hill" : "Polish Hill cottage community"}
+            class="aspect-[4/3] w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="reveal" style="transition-delay: 100ms;">
+        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+          {locale === "uk" ? "Про проєкт" : "About"}
+        </span>
+        <h2 class="mt-3">
+          {locale === "uk" ? "Polish Hill — ваш дім серед природи" : "Polish Hill — your home in nature"}
+        </h2>
+        <p class="mt-4 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "ЖК «Польський куточок» — котеджне містечко комфорт-класу в Оболонському районі Києва. Проєкт розташований на території КДТ «Чорнобилець», урочище «Наталка», 9 лінія."
+            : "Polish Hill is a comfort-class cottage community in Obolon district, Kyiv. Located in KDT Chornobylec, Natalka tract, line 9."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "I черга (8 котеджів) — повністю завершена і заселена. II черга (8 котеджів) — активний продаж. Кожен котедж — це 167 м² на 3 поверхи з власною ділянкою."
+            : "Phase I (8 cottages) — fully completed. Phase II (8 cottages) — active sales. Each cottage is 167 m² on 3 floors with own land plot."}
+        </p>
+
+        <div class="mt-8 grid grid-cols-2 gap-4">
+          {[
+            { value: "2019", label: locale === "uk" ? "Рік заснування" : "Founded" },
+            { value: "16", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
+            { value: "167 м²", label: locale === "uk" ? "Площа кожного" : "Each cottage" },
+            { value: "5 га", label: locale === "uk" ? "Територія" : "Territory" },
+          ].map(({ value, label }) => (
+            <div class="rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-4 text-center">
+              <span class="tabular-nums text-[1.5rem] font-bold text-[var(--ph-forest)]">{value}</span>
+              <p class="mt-1 text-[0.6875rem] text-[var(--ph-ink-muted)]">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Documents */}
+        <div class="mt-8">
+          <h4 class="text-[0.8125rem] font-semibold text-[var(--ph-ink)]">
+            {locale === "uk" ? "Документи" : "Documents"}
+          </h4>
+          <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-soft)]">
+            {locale === "uk"
+              ? "Всі дозвільні документи, кадастровий план та юридичні висновки доступні за запитом."
+              : "All permits, cadastral plan and legal opinions available upon request."}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,74 @@
+:root {
+  /* Neutrals */
+  --ph-bg: #faf9f6;
+  --ph-bg-alt: #f2efe8;
+  --ph-surface: #ffffff;
+  --ph-ink: #1a1a1a;
+  --ph-ink-soft: #4a4a47;
+  --ph-ink-muted: #8c8c87;
+
+  /* Brand */
+  --ph-forest: #2d4a3a;
+  --ph-forest-deep: #1e3328;
+  --ph-forest-light: #6b8676;
+  --ph-stone: #b8a88a;
+  --ph-stone-deep: #8b7a5c;
+  --ph-stone-light: #d4c9b0;
+
+  /* Functional */
+  --ph-success: #4a7c59;
+  --ph-warning: #c8924a;
+  --ph-error: #a84a3f;
+  --ph-info: #4a6b8c;
+
+  /* Lot status */
+  --ph-status-available: #4a7c59;
+  --ph-status-reserved: #c8924a;
+  --ph-status-sold: #8c8c87;
+
+  /* Borders */
+  --ph-border: rgba(26, 26, 26, 0.06);
+  --ph-border-strong: rgba(26, 26, 26, 0.12);
+
+  /* Shadows — layered, diffused */
+  --ph-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.03),
+    0 1px 3px rgba(26, 26, 26, 0.05);
+  --ph-shadow-md: 0 4px 6px -1px rgba(26, 26, 26, 0.05),
+    0 2px 4px -2px rgba(26, 26, 26, 0.04);
+  --ph-shadow-lg: 0 10px 15px -3px rgba(26, 26, 26, 0.06),
+    0 4px 6px -4px rgba(26, 26, 26, 0.04);
+  --ph-shadow-xl: 0 20px 25px -5px rgba(26, 26, 26, 0.07),
+    0 8px 10px -6px rgba(26, 26, 26, 0.04);
+
+  /* Radii */
+  --ph-radius-sm: 6px;
+  --ph-radius-md: 10px;
+  --ph-radius-lg: 16px;
+  --ph-radius-xl: 24px;
+  --ph-radius-2xl: 32px;
+  --ph-radius-full: 9999px;
+
+  /* Motion */
+  --ph-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ph-duration-fast: 200ms;
+  --ph-duration-ui: 350ms;
+  --ph-duration-page: 600ms;
+  --ph-duration-hero: 1000ms;
+
+  /* Section spacing */
+  --ph-section-py: clamp(5rem, 10vw, 9rem);
+  --ph-section-px: clamp(1.25rem, 4vw, 3rem);
+}
+
+[data-theme="dark"] {
+  --ph-bg: #0f100e;
+  --ph-bg-alt: #1a1b18;
+  --ph-surface: #1f2120;
+  --ph-ink: #f0ede5;
+  --ph-ink-soft: #c8c5bd;
+  --ph-ink-muted: #8c8c87;
+  --ph-forest: #6b8676;
+  --ph-stone: #b8a88a;
+  --ph-border: rgba(240, 237, 229, 0.06);
+  --ph-border-strong: rgba(240, 237, 229, 0.12);
+}

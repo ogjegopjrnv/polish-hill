@@ -1,0 +1,71 @@
+---
+import { TreePine, BadgeDollarSign, ShieldCheck, Star } from "lucide-astro";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const items = [
+  {
+    icon: "treepine",
+    title: locale === "uk" ? "Ліс та озеро" : "Forest & lake",
+    text: locale === "uk"
+      ? "Унікальна локація на Оболоні — вихід до лісу та озера за 2 хвилини пішки"
+      : "Unique Obolon location — forest and lake 2 minutes walk away",
+  },
+  {
+    icon: "dollar",
+    title: locale === "uk" ? "Від $1 000/м²" : "From $1,000/m²",
+    text: locale === "uk"
+      ? "Безпроцентна розстрочка від забудовника на 2.5 роки без участі банків"
+      : "Interest-free installment from developer for 2.5 years, no banks involved",
+  },
+  {
+    icon: "shield",
+    title: locale === "uk" ? "Юридична чистота" : "Legal clarity",
+    text: locale === "uk"
+      ? "Всі дозволи та документи в відкритому доступі. Повний юридичний супровід"
+      : "All permits and documents publicly available. Full legal support",
+  },
+  {
+    icon: "star",
+    title: locale === "uk" ? "Програма для ЗСУ" : "Military program",
+    text: locale === "uk"
+      ? "Спеціальна знижка та гнучкі умови оплати для військовослужбовців"
+      : "Special discount and flexible payment for military personnel",
+  },
+];
+---
+
+<section class="section relative overflow-hidden bg-[var(--ph-surface)]">
+  <div class="container-ph">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "Переваги" : "Advantages"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Чому обирають Polish Hill" : "Why choose Polish Hill"}
+      </h2>
+    </div>
+
+    <div class="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map(({ icon, title, text }, idx) => (
+        <div
+          class="reveal group relative rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-7 transition-all duration-[var(--ph-duration-ui)] hover:border-[var(--ph-forest)]/20 hover:shadow-[var(--ph-shadow-lg)]"
+          style={`transition-delay: ${idx * 80}ms;`}
+        >
+          <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-[var(--ph-radius-lg)] bg-[var(--ph-forest)]/[0.07] text-[var(--ph-forest)] transition-colors duration-300 group-hover:bg-[var(--ph-forest)]/[0.12]">
+            {icon === "treepine" && <TreePine size={26} strokeWidth={1.5} />}
+            {icon === "dollar" && <BadgeDollarSign size={26} strokeWidth={1.5} />}
+            {icon === "shield" && <ShieldCheck size={26} strokeWidth={1.5} />}
+            {icon === "star" && <Star size={26} strokeWidth={1.5} />}
+          </div>
+
+          <h3 class="text-[1.125rem]">{title}</h3>
+          <p class="mt-2.5 text-[0.875rem] leading-relaxed text-[var(--ph-ink-soft)]">
+            {text}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

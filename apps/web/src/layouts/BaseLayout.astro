@@ -1,0 +1,95 @@
+---
+import "@/styles/global.css";
+import SiteHeader from "@components/layout/SiteHeader.astro";
+import SiteFooter from "@components/layout/SiteFooter.astro";
+import ModalForm from "@components/form/ModalForm.astro";
+import CottageModal from "@components/form/CottageModal.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = "Котеджне містечко Polish Hill — преміум таунхауси на Оболоні, Київ. Від $1000/м². Безпроцентна розстрочка 2.5 роки.",
+  ogImage = "/og-default.png",
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const locale = Astro.currentLocale ?? "uk";
+---
+
+<!doctype html>
+<html lang={locale} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Polish Hill</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} | Polish Hill`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:locale" content={locale === "uk" ? "uk_UA" : "en_US"} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Polish Hill`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Polish Hill",
+        url: "https://ph.kiev.ua",
+        description: "Котеджне містечко Polish Hill — преміум таунхауси на Оболоні, Київ",
+        inLanguage: locale === "uk" ? "uk-UA" : "en-US",
+      })}
+    />
+  </head>
+  <body class="flex min-h-dvh flex-col overflow-x-hidden bg-[var(--ph-bg)] text-[var(--ph-ink)]">
+    <a href="#main" class="skip-link">Перейти до контенту</a>
+    <SiteHeader />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <ModalForm />
+    <CottageModal />
+
+    <!-- Scroll reveal observer -->
+    <script>
+      // Immediately reveal elements that are already in viewport
+      const reveals = document.querySelectorAll(".reveal");
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+        );
+        reveals.forEach((el) => observer.observe(el));
+      } else {
+        // Fallback: show everything
+        reveals.forEach((el) => el.classList.add("visible"));
+      }
+    </script>
+  </body>
+</html>

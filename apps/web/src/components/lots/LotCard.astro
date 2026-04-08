@@ -1,0 +1,119 @@
+---
+import type { Lot } from "@data/lots";
+import { formatPrice, statusLabelUk } from "@data/lots";
+import type { Locale } from "@lib/i18n/translations";
+
+interface Props {
+  lot: Lot;
+  locale?: Locale;
+}
+
+const { lot, locale = "uk" } = Astro.props;
+
+const statusColors: Record<string, string> = {
+  available: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  reserved: "bg-amber-50 text-amber-700 border-amber-200",
+  sold: "bg-neutral-100 text-neutral-500 border-neutral-200",
+};
+
+const statusLabel = locale === "uk"
+  ? { available: "Вільний", reserved: "Резерв", sold: "Продано" }[lot.status]
+  : { available: "Available", reserved: "Reserved", sold: "Sold" }[lot.status];
+
+const isClickable = lot.status !== "sold";
+const Tag = isClickable ? "a" : "div";
+---
+
+<Tag
+  href={isClickable ? `/lots/${lot.id}` : undefined}
+  class:list={[
+    "reveal group relative flex flex-col overflow-hidden rounded-[var(--ph-radius-xl)] border bg-[var(--ph-surface)] transition-all duration-[var(--ph-duration-ui)] ease-[var(--ph-ease)]",
+    isClickable
+      ? "border-[var(--ph-border)] cursor-pointer hover:border-[var(--ph-forest)]/20 hover:shadow-[var(--ph-shadow-lg)]"
+      : "border-[var(--ph-border)] opacity-60",
+  ]}
+>
+  {/* Image */}
+  <div class="relative aspect-[4/3] overflow-hidden bg-[var(--ph-bg-alt)]">
+    <img
+      src={lot.image}
+      alt={`Котедж №${lot.number}`}
+      class:list={[
+        "h-full w-full object-cover transition-transform duration-700 ease-[var(--ph-ease)]",
+        isClickable && "group-hover:scale-105",
+      ]}
+      loading="lazy"
+      decoding="async"
+    />
+
+    {/* Status badge */}
+    <div class="absolute top-3 left-3">
+      <span class:list={["inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.6875rem] font-semibold", statusColors[lot.status]]}>
+        <span class:list={[
+          "h-1.5 w-1.5 rounded-full",
+          lot.status === "available" && "bg-emerald-500",
+          lot.status === "reserved" && "bg-amber-500",
+          lot.status === "sold" && "bg-neutral-400",
+        ]}></span>
+        {statusLabel}
+      </span>
+    </div>
+
+    {/* Phase badge */}
+    <div class="absolute top-3 right-3">
+      <span class="rounded-full bg-black/50 px-2.5 py-1 text-[0.6875rem] font-medium text-white backdrop-blur-sm">
+        {locale === "uk" ? `${lot.phase} черга` : `Phase ${lot.phase}`}
+      </span>
+    </div>
+  </div>
+
+  {/* Content */}
+  <div class="flex flex-1 flex-col p-5">
+    {/* Header */}
+    <div class="flex items-start justify-between">
+      <div>
+        <h3 class="text-lg leading-tight">
+          {locale === "uk" ? `Котедж №${lot.number}` : `Cottage #${lot.number}`}
+        </h3>
+        <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-muted)]">
+          {lot.area} м² &middot; {lot.floors} {locale === "uk" ? "пов." : "fl."} &middot; {lot.bedrooms} {locale === "uk" ? "спальні" : "bed"}
+        </p>
+      </div>
+      {lot.status !== "sold" && (
+        <div class="text-right">
+          <span class="tabular-nums text-lg font-bold text-[var(--ph-forest)]">
+            {formatPrice(lot.totalPrice)}
+          </span>
+          <p class="text-[0.6875rem] text-[var(--ph-ink-muted)]">
+            {formatPrice(lot.pricePerSqm)}/м²
+          </p>
+        </div>
+      )}
+    </div>
+
+    {/* Features */}
+    {lot.features.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {lot.features.slice(0, 4).map((f) => (
+          <span class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] px-2.5 py-1 text-[0.6875rem] text-[var(--ph-ink-soft)]">
+            {f}
+          </span>
+        ))}
+        {lot.features.length > 4 && (
+          <span class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] px-2.5 py-1 text-[0.6875rem] text-[var(--ph-ink-muted)]">
+            +{lot.features.length - 4}
+          </span>
+        )}
+      </div>
+    )}
+
+    {/* CTA hint */}
+    {isClickable && (
+      <div class="mt-auto pt-4">
+        <span class="text-[0.8125rem] font-medium text-[var(--ph-forest)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          {locale === "uk" ? "Детальніше →" : "Learn more →"}
+        </span>
+      </div>
+    )}
+  </div>
+</Tag>

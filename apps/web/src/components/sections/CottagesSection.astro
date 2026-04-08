@@ -1,0 +1,120 @@
+---
+import { lots, formatPrice } from "@data/lots";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const phase2 = lots.filter((l) => l.phase === 2);
+const availableCount = lots.filter((l) => l.status === "available").length;
+
+const statusColors: Record<string, string> = {
+  available: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  reserved: "bg-amber-50 text-amber-700 border-amber-200",
+  sold: "bg-neutral-100 text-neutral-500 border-neutral-200",
+};
+
+function statusLabel(status: string) {
+  return locale === "uk"
+    ? { available: "Вільний", reserved: "Резерв", sold: "Продано" }[status]
+    : { available: "Available", reserved: "Reserved", sold: "Sold" }[status];
+}
+---
+
+<section id="cottages" class="section bg-[var(--ph-surface)]">
+  <div class="container-ph">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "II черга — продаж відкрито" : "Phase II — now selling"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Оберіть свій котедж" : "Choose your cottage"}
+      </h2>
+      <p class="mt-4 text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? `${availableCount} котеджів вільні. Площа 167 м², 3 поверхи, від $1 000/м².`
+          : `${availableCount} cottages available. 167 m², 3 floors, from $1,000/m².`}
+      </p>
+    </div>
+
+    {/* Compact lot cards grid */}
+    <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {phase2.map((lot, idx) => (
+        <div
+          class:list={[
+            "reveal group relative overflow-hidden rounded-[var(--ph-radius-xl)] border bg-[var(--ph-bg)] transition-all duration-[var(--ph-duration-ui)]",
+            lot.status !== "sold"
+              ? "border-[var(--ph-border)] hover:border-[var(--ph-forest)]/20 hover:shadow-[var(--ph-shadow-lg)] cursor-pointer"
+              : "border-[var(--ph-border)] opacity-70",
+          ]}
+          style={`transition-delay: ${idx * 60}ms;`}
+          data-cottage-trigger={lot.status !== "sold" ? lot.id : undefined}
+          role={lot.status !== "sold" ? "button" : undefined}
+          tabindex={lot.status !== "sold" ? "0" : undefined}
+        >
+          {/* Image */}
+          <div class="relative aspect-[16/10] overflow-hidden">
+            <img
+              src={lot.image}
+              alt={`Котедж №${lot.number}`}
+              class:list={[
+                "h-full w-full object-cover transition-transform duration-700 ease-[var(--ph-ease)]",
+                lot.status === "available" && "group-hover:scale-105",
+              ]}
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute top-2.5 left-2.5">
+              <span class:list={["inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[0.625rem] font-semibold", statusColors[lot.status]]}>
+                <span class:list={[
+                  "h-1.5 w-1.5 rounded-full",
+                  lot.status === "available" && "bg-emerald-500",
+                  lot.status === "reserved" && "bg-amber-500",
+                  lot.status === "sold" && "bg-neutral-400",
+                ]}></span>
+                {statusLabel(lot.status)}
+              </span>
+            </div>
+          </div>
+
+          {/* Info */}
+          <div class="p-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-base leading-tight">
+                  №{lot.number}
+                </h3>
+                <p class="mt-0.5 text-[0.75rem] text-[var(--ph-ink-muted)]">
+                  {lot.area} м² · {lot.floors} пов. · {lot.bedrooms} спальні
+                </p>
+              </div>
+              {lot.status !== "sold" && (
+                <span class="tabular-nums text-base font-bold text-[var(--ph-forest)]">
+                  {formatPrice(lot.totalPrice)}
+                </span>
+              )}
+            </div>
+
+            {lot.features.length > 0 && (
+              <div class="mt-3 flex flex-wrap gap-1">
+                {lot.features.slice(0, 3).map((f) => (
+                  <span class="rounded-[var(--ph-radius-sm)] bg-[var(--ph-surface)] px-2 py-0.5 text-[0.625rem] text-[var(--ph-ink-muted)]">
+                    {f}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Phase I summary — compact */}
+    <div class="reveal mt-12 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 text-center">
+      <p class="text-[0.875rem] text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "I черга (8 котеджів) — повністю завершена та продана."
+          : "Phase I (8 cottages) — fully completed and sold."}
+      </p>
+    </div>
+  </div>
+</section>

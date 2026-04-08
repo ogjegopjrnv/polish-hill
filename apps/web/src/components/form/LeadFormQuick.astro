@@ -1,0 +1,58 @@
+---
+import type { Locale } from "@lib/i18n/translations";
+import Button from "@components/ui/Button.astro";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+---
+
+<section class="bg-[var(--ph-forest-deep)] py-20 md:py-28" id="lead-form">
+  <div class="mx-auto max-w-3xl px-6 text-center">
+    <h2 class="text-white">
+      {locale === "uk" ? "Отримати консультацію" : "Get a consultation"}
+    </h2>
+    <p class="mx-auto mt-4 max-w-xl text-lg text-white/70">
+      {
+        locale === "uk"
+          ? "Залиште контакти — менеджер зателефонує протягом 15 хвилин та відповість на всі питання"
+          : "Leave your contacts — our manager will call within 15 minutes and answer all your questions"
+      }
+    </p>
+
+    <form
+      id="quick-lead-form"
+      class="mx-auto mt-10 flex max-w-xl flex-col gap-4 sm:flex-row"
+      novalidate
+    >
+      <!-- Honeypot -->
+      <input type="text" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <input
+        type="text"
+        name="name"
+        required
+        placeholder={locale === "uk" ? "Ваше ім'я" : "Your name"}
+        class="flex-1 rounded-[var(--ph-radius-md)] border border-white/20 bg-white/10 px-5 py-3.5 text-white placeholder:text-white/50 backdrop-blur-sm focus:border-white/40 focus:outline-none"
+        autocomplete="given-name"
+      />
+      <input
+        type="tel"
+        name="phone"
+        required
+        placeholder="+380 __ ___ __ __"
+        class="flex-1 rounded-[var(--ph-radius-md)] border border-white/20 bg-white/10 px-5 py-3.5 text-white placeholder:text-white/50 backdrop-blur-sm focus:border-white/40 focus:outline-none"
+        autocomplete="tel"
+      />
+      <Button as="button" variant="secondary" size="md" class="bg-white text-[var(--ph-forest-deep)] hover:bg-[var(--ph-bg-alt)] hover:text-[var(--ph-forest-deep)] whitespace-nowrap">
+        {locale === "uk" ? "Зателефонуйте мені" : "Call me back"}
+      </Button>
+    </form>
+
+    <p class="mt-4 text-xs text-white/40">
+      {
+        locale === "uk"
+          ? "Натискаючи кнопку, ви погоджуєтесь з політикою конфіденційності"
+          : "By clicking, you agree to our privacy policy"
+      }
+    </p>
+  </div>
+</section>

@@ -1,0 +1,93 @@
+---
+import { t } from "@lib/i18n/translations";
+import type { Locale } from "@lib/i18n/translations";
+import Button from "@components/ui/Button.astro";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+const i = t(locale);
+
+const stats = [
+  { value: "5 га", label: locale === "uk" ? "Територія містечка" : "Total area" },
+  { value: "48", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
+  { value: "2027", label: locale === "uk" ? "Рік введення в експлуатацію" : "Completion year" },
+  { value: "100%", label: locale === "uk" ? "Юридична прозорість" : "Legal transparency" },
+];
+---
+
+<section class="relative min-h-dvh overflow-hidden" aria-label="Hero">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img
+      src="/images/client/ph-14.jpg"
+      alt="Polish Hill — котеджне містечко"
+      class="h-full w-full object-cover object-center"
+      loading="eager"
+      decoding="async"
+    />
+    <!-- Cinematic gradient overlay — stronger for readability -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/80"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent"></div>
+  </div>
+
+  <!-- Content positioned at bottom-left -->
+  <div class="relative z-10 flex min-h-dvh flex-col justify-end">
+    <div class="container-ph pb-12 md:pb-20">
+      <!-- Eyebrow pill -->
+      <div class="mb-8 reveal" style="transition-delay: 100ms;">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-5 py-2 text-[0.8125rem] font-medium text-white/90 backdrop-blur-md">
+          <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"></span>
+          {i.hero.eyebrow}
+        </span>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="reveal max-w-[48rem] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" style="transition-delay: 200ms;">
+        {i.hero.heading}
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="reveal mt-6 max-w-xl text-[1.125rem] leading-relaxed text-white/75 md:text-[1.25rem]" style="transition-delay: 300ms;">
+        {i.hero.subtitle}
+      </p>
+
+      <!-- CTAs -->
+      <div class="reveal mt-10 flex flex-wrap items-center gap-4" style="transition-delay: 400ms;">
+        <Button href="#cottages" variant="primary" size="lg" class="shadow-[0_4px_20px_rgba(45,74,58,0.4)]">
+          {i.cta.chooseCottage}
+        </Button>
+        <Button
+          as="button"
+          variant="outline"
+          size="lg"
+          class="border-white/25 text-white hover:border-white/50 hover:text-white bg-white/[0.06] backdrop-blur-sm"
+          data-modal-trigger="lead"
+        >
+          {i.cta.bookTour}
+        </Button>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="reveal mt-16 md:mt-20" style="transition-delay: 500ms;">
+        <div class="grid grid-cols-2 gap-6 border-t border-white/[0.12] pt-8 md:grid-cols-4 md:gap-12">
+          {stats.map(({ value, label }) => (
+            <div class="flex flex-col gap-1">
+              <span class="tabular-nums text-[1.75rem] font-bold tracking-tight text-white md:text-[2rem]">
+                {value}
+              </span>
+              <span class="text-[0.8125rem] leading-snug text-white/50">
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+    <div class="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/20 p-1.5">
+      <div class="h-2 w-1 animate-bounce rounded-full bg-white/50"></div>
+    </div>
+  </div>
+</section>

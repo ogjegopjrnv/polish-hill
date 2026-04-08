@@ -1,0 +1,19 @@
+{
+  "name": "polish-hill",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @ph/web dev",
+    "build": "pnpm --filter @ph/web build",
+    "preview": "pnpm --filter @ph/web preview"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+---
+import MasterPlanMap from "@components/masterplan/MasterPlanMap.astro";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+---
+
+<section id="masterplan" class="section bg-[var(--ph-bg)]">
+  <div class="container-ph">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "Генплан" : "Master plan"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Карта містечка" : "Community map"}
+      </h2>
+      <p class="mt-4 text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "Натисніть на котедж для перегляду. Зелені — вільні, жовті — в резерві."
+          : "Click a cottage to view. Green — available, yellow — reserved."}
+      </p>
+    </div>
+
+    <div class="reveal mt-12">
+      <MasterPlanMap />
+    </div>
+
+    {/* Quick info cards */}
+    <div class="reveal mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
+      {[
+        {
+          title: locale === "uk" ? "Територія" : "Territory",
+          text: locale === "uk"
+            ? "5 га закритої території з власною інфраструктурою та озелененням."
+            : "5 ha gated community with own infrastructure and landscaping.",
+        },
+        {
+          title: locale === "uk" ? "Комунікації" : "Utilities",
+          text: locale === "uk"
+            ? "Електрика, газ, вода, каналізація — централізовано. Автономне опалення."
+            : "Electricity, gas, water, sewage — centralized. Autonomous heating.",
+        },
+        {
+          title: locale === "uk" ? "Безпека" : "Security",
+          text: locale === "uk"
+            ? "Закрита територія, відеоспостереження, контроль доступу 24/7."
+            : "Gated territory, CCTV, 24/7 access control.",
+        },
+      ].map(({ title, text }) => (
+        <div class="rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-6">
+          <h3 class="text-base">{title}</h3>
+          <p class="mt-2 text-[0.8125rem] leading-relaxed text-[var(--ph-ink-soft)]">{text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

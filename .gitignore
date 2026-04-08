@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+*.log
+.DS_Store
+screenshots/
+.env
+.env.*
+
+# Client raw materials (originals)
+Матеріали від клієнта для сайту/
+*.pdf
+SKILL.md

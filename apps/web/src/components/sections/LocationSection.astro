@@ -1,0 +1,70 @@
+---
+import { Trees, School, ShoppingCart, TrainFront, Hospital, Building2 } from "lucide-astro";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const pois = [
+  { icon: "trees", label: locale === "uk" ? "Ліс та озеро" : "Forest & lake", time: "2 хв", color: "text-emerald-600" },
+  { icon: "school", label: locale === "uk" ? "Школа, садочок" : "School", time: "5 хв", color: "text-blue-600" },
+  { icon: "cart", label: locale === "uk" ? "Супермаркети" : "Supermarkets", time: "3 хв", color: "text-orange-600" },
+  { icon: "train", label: locale === "uk" ? "Метро Оболонь" : "Metro Obolon", time: "10 хв", color: "text-red-600" },
+  { icon: "hospital", label: locale === "uk" ? "Лікарня" : "Hospital", time: "7 хв", color: "text-rose-600" },
+  { icon: "city", label: locale === "uk" ? "Центр Києва" : "Kyiv center", time: "15 хв", color: "text-violet-600" },
+];
+---
+
+<section id="location" class="section bg-[var(--ph-surface)]">
+  <div class="container-ph">
+    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+      <div class="reveal">
+        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+          {locale === "uk" ? "Локація" : "Location"}
+        </span>
+        <h2 class="mt-3">
+          {locale === "uk" ? "Оболонь — серце зеленого Києва" : "Obolon — heart of green Kyiv"}
+        </h2>
+        <p class="mt-4 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Вул. Богатирська 30а — межа міста з природою. Ліс, озеро та повна інфраструктура поруч."
+            : "Bogatyrska 30a — city meets nature. Forest, lake and full infrastructure nearby."}
+        </p>
+
+        <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {pois.map(({ icon, label, time, color }) => (
+            <div class="flex items-center gap-3 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] px-4 py-3.5">
+              <div class:list={["shrink-0", color]}>
+                {icon === "trees" && <Trees size={20} strokeWidth={1.5} />}
+                {icon === "school" && <School size={20} strokeWidth={1.5} />}
+                {icon === "cart" && <ShoppingCart size={20} strokeWidth={1.5} />}
+                {icon === "train" && <TrainFront size={20} strokeWidth={1.5} />}
+                {icon === "hospital" && <Hospital size={20} strokeWidth={1.5} />}
+                {icon === "city" && <Building2 size={20} strokeWidth={1.5} />}
+              </div>
+              <div class="min-w-0">
+                <p class="truncate text-[0.8125rem] font-medium text-[var(--ph-ink)]">{label}</p>
+                <p class="text-[0.75rem] text-[var(--ph-ink-muted)]">{time}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="reveal" style="transition-delay: 150ms;">
+        <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-xl)]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2538.5!2d30.478!3d50.515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTDCsDMwJzU0LjAiTiAzMMKwMjgnNDEuMCJF!5e0!3m2!1suk!2sua!4v1"
+            width="100%"
+            height="400"
+            style="border:0;"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title={locale === "uk" ? "Карта розташування" : "Location map"}
+            class="aspect-[4/3] w-full"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

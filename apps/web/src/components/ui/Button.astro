@@ -1,0 +1,58 @@
+---
+interface Props {
+  variant?: "primary" | "ghost" | "outline";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  as?: "a" | "button";
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  as: Tag = href ? "a" : "button",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const base = [
+  "inline-flex items-center justify-center gap-2",
+  "font-medium leading-none cursor-pointer select-none",
+  "transition-all duration-[var(--ph-duration-ui)] ease-[var(--ph-ease)]",
+  "active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none",
+].join(" ");
+
+const variants: Record<string, string> = {
+  primary: [
+    "bg-[var(--ph-forest)] text-white",
+    "hover:bg-[var(--ph-forest-deep)]",
+    "shadow-[0_1px_2px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.08)]",
+    "hover:shadow-[0_4px_12px_rgba(45,74,58,0.3)]",
+  ].join(" "),
+  ghost: [
+    "text-[var(--ph-ink)] bg-transparent",
+    "hover:bg-[var(--ph-ink)]/[0.04]",
+  ].join(" "),
+  outline: [
+    "border-2 border-[var(--ph-border-strong)] text-[var(--ph-ink)]",
+    "hover:border-[var(--ph-forest)] hover:text-[var(--ph-forest)]",
+    "bg-transparent",
+  ].join(" "),
+};
+
+const sizes: Record<string, string> = {
+  sm: "text-[0.8125rem] h-9 px-4 rounded-[var(--ph-radius-md)]",
+  md: "text-[0.875rem] h-11 px-6 rounded-[var(--ph-radius-md)]",
+  lg: "text-[0.9375rem] h-[3.25rem] px-8 rounded-[var(--ph-radius-lg)]",
+};
+---
+
+<Tag
+  href={Tag === "a" ? href : undefined}
+  class:list={[base, variants[variant], sizes[size], className]}
+  {...rest}
+>
+  <slot />
+</Tag>

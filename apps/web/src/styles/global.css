@@ -1,0 +1,202 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./fonts.css";
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--ph-ink);
+    background-color: var(--ph-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    font-optical-sizing: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    min-height: 100dvh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Typography — modern serif display + clean body */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 420;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    color: var(--ph-ink);
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 5.5vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    font-variation-settings: "opsz" 72;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.12;
+    font-variation-settings: "opsz" 48;
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.3;
+    font-variation-settings: "opsz" 32;
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+    font-variation-settings: "opsz" 24;
+  }
+
+  p {
+    max-width: 68ch;
+    line-height: 1.7;
+  }
+
+  /* Focus */
+  :focus-visible {
+    outline: 2px solid var(--ph-forest);
+    outline-offset: 3px;
+    border-radius: var(--ph-radius-sm);
+  }
+
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 200;
+    padding: 12px 24px;
+    background: var(--ph-forest);
+    color: white;
+    border-radius: var(--ph-radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: top var(--ph-duration-fast) var(--ph-ease);
+  }
+  .skip-link:focus {
+    top: 16px;
+  }
+
+  /* Tabular nums */
+  .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Section rhythm */
+  .section {
+    padding-block: var(--ph-section-py);
+    padding-inline: var(--ph-section-px);
+  }
+
+  /* Max-width container */
+  .container-ph {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: var(--ph-section-px);
+  }
+
+  /* Smooth reveal animation — CSS-driven with JS enhancement */
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealUp 0.7s var(--ph-ease) forwards;
+    animation-play-state: paused;
+  }
+
+  /* Fallback: if JS observer kicks in, it manages visibility */
+  .reveal.visible {
+    animation-play-state: running;
+  }
+
+  /* If no JS / static preview — show content anyway after small delay */
+  @media (scripting: none) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+
+  /* Glass surface */
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  }
+
+  /* Calculator range slider */
+  .calc-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+      to right,
+      var(--ph-forest) 0%,
+      var(--ph-forest) var(--pct, 50%),
+      var(--ph-bg-alt) var(--pct, 50%),
+      var(--ph-bg-alt) 100%
+    );
+    outline: none;
+    cursor: pointer;
+  }
+  .calc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ph-forest);
+    border: 3px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+  }
+  .calc-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ph-forest);
+    border: 3px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+  }
+
+  /* Image treatment */
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}

@@ -1,0 +1,206 @@
+---
+import { t } from "@lib/i18n/translations";
+import type { Locale } from "@lib/i18n/translations";
+import Button from "@components/ui/Button.astro";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+const i = t(locale);
+
+const navItems = [
+  { label: i.nav.lots, href: "#cottages" },
+  { label: i.nav.masterPlan, href: "#masterplan" },
+  { label: i.nav.location, href: "#location" },
+  { label: i.nav.finance, href: "#finance" },
+  { label: i.nav.about, href: "#about" },
+  { label: i.nav.contact, href: "#contact" },
+];
+---
+
+<!-- Top bar — phase announcement -->
+<div class="relative z-50 bg-[var(--ph-forest)] text-center">
+  <p class="py-2 text-[0.8125rem] font-medium tracking-wide text-white/90">
+    {i.phaseBadge}
+  </p>
+</div>
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 w-full border-b border-transparent transition-all duration-[var(--ph-duration-ui)] ease-[var(--ph-ease)]"
+>
+  <nav class="container-ph flex h-16 items-center justify-between lg:h-[4.5rem]">
+    <!-- Logo -->
+    <a href="/" class="relative z-10 flex items-center gap-3" aria-label="Polish Hill — головна">
+      <img src="/images/client/ph-6.jpg" alt="Polish Hill" class="h-9 w-9 rounded-[var(--ph-radius-sm)] object-cover" />
+      <span class="text-[1.1rem] font-semibold tracking-tight" style="font-family: var(--font-display);">
+        Polish Hill
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="hidden items-center gap-1 lg:flex" role="list">
+      {navItems.map(({ label, href }) => (
+        <li>
+          <a
+            href={href}
+            class="rounded-[var(--ph-radius-md)] px-3.5 py-2 text-[0.8125rem] font-medium text-[var(--ph-ink-soft)] transition-colors duration-200 hover:bg-[var(--ph-ink)]/[0.04] hover:text-[var(--ph-ink)]"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Right side -->
+    <div class="flex items-center gap-3">
+      <!-- Language -->
+      <a
+        href={locale === "uk" ? "/en" : "/"}
+        class="hidden text-[0.8125rem] font-medium text-[var(--ph-ink-muted)] transition-colors hover:text-[var(--ph-ink)] lg:block"
+      >
+        {locale === "uk" ? "EN" : "UA"}
+      </a>
+
+      <!-- Phone -->
+      <a
+        href="tel:+380674406070"
+        class="hidden items-center gap-1.5 text-[0.8125rem] font-semibold text-[var(--ph-ink)] lg:flex"
+        aria-label="Зателефонувати"
+      >
+        <svg class="h-4 w-4 text-[var(--ph-forest)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+        </svg>
+        +380 67 440 60 70
+      </a>
+
+      <!-- CTA -->
+      <Button
+        as="button"
+        variant="primary"
+        size="sm"
+        class="hidden lg:inline-flex"
+        data-modal-trigger="lead"
+      >
+        {i.cta.bookTour}
+      </Button>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="mobile-menu-toggle"
+        class="relative z-10 flex h-10 w-10 items-center justify-center rounded-[var(--ph-radius-md)] transition-colors hover:bg-[var(--ph-ink)]/[0.05] lg:hidden"
+        aria-label="Меню"
+        aria-expanded="false"
+      >
+        <div class="flex w-5 flex-col gap-[5px]" id="hamburger-icon">
+          <span class="block h-[1.5px] w-full origin-center rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
+          <span class="block h-[1.5px] w-full rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
+          <span class="block h-[1.5px] w-full origin-center rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
+        </div>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile fullscreen menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-30 flex translate-x-full flex-col bg-[var(--ph-bg)] transition-transform duration-500 ease-[var(--ph-ease)] lg:hidden"
+  aria-hidden="true"
+>
+  <div class="flex flex-1 flex-col justify-center px-8">
+    <ul class="flex flex-col gap-2" role="list">
+      {navItems.map(({ label, href }, idx) => (
+        <li>
+          <a
+            href={href}
+            class="block py-3 text-[2rem] font-medium tracking-tight text-[var(--ph-ink)] transition-all duration-500"
+            style={`font-family: var(--font-display); transition-delay: ${idx * 60}ms;`}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-12 flex flex-col gap-4">
+      <a
+        href="tel:+380674406070"
+        class="text-lg font-semibold text-[var(--ph-ink)]"
+      >
+        +380 67 440 60 70
+      </a>
+      <Button as="button" variant="primary" size="lg" class="w-full" data-modal-trigger="lead">
+        {i.cta.bookTour}
+      </Button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const header = document.getElementById("site-header");
+  const toggle = document.getElementById("mobile-menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const icon = document.getElementById("hamburger-icon");
+  let open = false;
+
+  // Solid header on scroll
+  const updateHeader = () => {
+    if (!header) return;
+    const scrolled = window.scrollY > 20;
+    header.classList.toggle("glass", scrolled);
+    header.classList.toggle("border-[var(--ph-border)]", scrolled);
+    header.classList.toggle("border-transparent", !scrolled);
+  };
+  window.addEventListener("scroll", updateHeader, { passive: true });
+  updateHeader();
+
+  // Mobile menu
+  toggle?.addEventListener("click", () => {
+    open = !open;
+    menu?.classList.toggle("translate-x-full", !open);
+    menu?.classList.toggle("translate-x-0", open);
+    menu?.setAttribute("aria-hidden", String(!open));
+    toggle.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+
+    // Animate hamburger → X
+    const lines = icon?.querySelectorAll("span");
+    if (lines && lines.length === 3) {
+      if (open) {
+        lines[0].style.transform = "translateY(3.25px) rotate(45deg)";
+        lines[1].style.opacity = "0";
+        lines[2].style.transform = "translateY(-3.25px) rotate(-45deg)";
+      } else {
+        lines[0].style.transform = "";
+        lines[1].style.opacity = "";
+        lines[2].style.transform = "";
+      }
+    }
+  });
+
+  // Close mobile menu helper
+  function closeMobileMenu() {
+    if (!open) return;
+    open = false;
+    menu?.classList.add("translate-x-full");
+    menu?.classList.remove("translate-x-0");
+    menu?.setAttribute("aria-hidden", "true");
+    toggle?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+    const lines = icon?.querySelectorAll("span");
+    if (lines && lines.length === 3) {
+      lines[0].style.transform = "";
+      lines[1].style.opacity = "";
+      lines[2].style.transform = "";
+    }
+  }
+
+  // Close mobile menu on anchor link click
+  menu?.querySelectorAll("a[href^='#']").forEach((link) => {
+    link.addEventListener("click", () => closeMobileMenu());
+  });
+
+  // Close mobile menu on CTA button click (then modal opens via its own handler)
+  menu?.querySelectorAll("[data-modal-trigger]").forEach((btn) => {
+    btn.addEventListener("click", () => closeMobileMenu());
+  });
+</script>

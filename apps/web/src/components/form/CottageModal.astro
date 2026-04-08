@@ -1,0 +1,194 @@
+---
+import { lots } from "@data/lots";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+const availableLots = lots.filter((l) => l.status === "available" || l.status === "reserved");
+---
+
+<!-- Cottage detail overlay -->
+<div
+  id="cottage-overlay"
+  class="fixed inset-0 z-[100] hidden bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+  aria-hidden="true"
+>
+  <div
+    id="cottage-container"
+    class="flex min-h-full items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cottage-modal-title"
+  >
+    <div
+      id="cottage-card"
+      class="relative w-full max-w-lg translate-y-4 scale-[0.97] rounded-[var(--ph-radius-2xl)] bg-[var(--ph-surface)] opacity-0 shadow-[var(--ph-shadow-xl)] transition-all duration-[var(--ph-duration-ui)] ease-[var(--ph-ease)] overflow-hidden"
+    >
+      <!-- Close -->
+      <button
+        id="cottage-close"
+        class="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50"
+        aria-label="Закрити"
+      >
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Dynamic content filled by JS -->
+      <div id="cottage-modal-image" class="aspect-[16/10] w-full bg-[var(--ph-bg-alt)]">
+        <img src="" alt="" class="h-full w-full object-cover" />
+      </div>
+
+      <div class="p-6 sm:p-8">
+        <div class="flex items-center gap-3">
+          <span id="cottage-modal-status" class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.6875rem] font-semibold"></span>
+          <span id="cottage-modal-phase" class="text-[0.8125rem] text-[var(--ph-ink-muted)]"></span>
+        </div>
+
+        <h3 id="cottage-modal-title" class="mt-3 text-xl"></h3>
+        <p id="cottage-modal-desc" class="mt-2 text-[0.875rem] text-[var(--ph-ink-soft)]"></p>
+
+        <!-- Price -->
+        <div id="cottage-modal-price-block" class="mt-5 flex items-end justify-between rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-4">
+          <div>
+            <p class="text-[0.6875rem] font-medium uppercase tracking-wider text-[var(--ph-ink-muted)]">
+              {locale === "uk" ? "Вартість" : "Price"}
+            </p>
+            <p id="cottage-modal-price" class="tabular-nums mt-0.5 text-[1.5rem] font-bold text-[var(--ph-forest)]"></p>
+          </div>
+          <p id="cottage-modal-ppsqm" class="tabular-nums text-[0.8125rem] text-[var(--ph-ink-muted)]"></p>
+        </div>
+
+        <!-- Specs -->
+        <div id="cottage-modal-specs" class="mt-4 grid grid-cols-3 gap-3 text-center">
+          <div class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] p-3">
+            <p id="cottage-modal-area" class="tabular-nums text-base font-bold"></p>
+            <p class="text-[0.625rem] text-[var(--ph-ink-muted)]">м²</p>
+          </div>
+          <div class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] p-3">
+            <p id="cottage-modal-floors" class="tabular-nums text-base font-bold"></p>
+            <p class="text-[0.625rem] text-[var(--ph-ink-muted)]">{locale === "uk" ? "поверхи" : "floors"}</p>
+          </div>
+          <div class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] p-3">
+            <p id="cottage-modal-beds" class="tabular-nums text-base font-bold"></p>
+            <p class="text-[0.625rem] text-[var(--ph-ink-muted)]">{locale === "uk" ? "спальні" : "bedrooms"}</p>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div id="cottage-modal-features" class="mt-4 flex flex-wrap gap-1.5"></div>
+
+        <!-- CTAs -->
+        <div class="mt-6 flex gap-3">
+          <button
+            type="button"
+            class="cottage-book-btn flex-1 flex h-12 items-center justify-center rounded-[var(--ph-radius-lg)] bg-[var(--ph-forest)] text-[0.9375rem] font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.1),0_4px_12px_rgba(45,74,58,0.25)] transition-all duration-300 hover:bg-[var(--ph-forest-deep)] active:scale-[0.98]"
+            data-modal-trigger="lead"
+          >
+            {locale === "uk" ? "Забронювати" : "Reserve"}
+          </button>
+          <a
+            href="tel:+380674406070"
+            class="flex h-12 items-center justify-center rounded-[var(--ph-radius-lg)] border-2 border-[var(--ph-border-strong)] bg-transparent px-6 text-[0.9375rem] font-semibold text-[var(--ph-ink)] transition-all duration-300 hover:border-[var(--ph-forest)] hover:text-[var(--ph-forest)]"
+          >
+            {locale === "uk" ? "Зателефонувати" : "Call"}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lot data for JS -->
+<script define:vars={{ lotsJson: JSON.stringify(availableLots), locale }}>
+  window.__PH_LOTS = JSON.parse(lotsJson);
+  window.__PH_LOCALE = locale;
+</script>
+
+<script>
+  const overlay = document.getElementById("cottage-overlay");
+  const card = document.getElementById("cottage-card");
+  const closeBtn = document.getElementById("cottage-close");
+
+  function openCottageModal(lotId: string) {
+    const lots = (window as any).__PH_LOTS || [];
+    const locale = (window as any).__PH_LOCALE || "uk";
+    const lot = lots.find((l: any) => l.id === lotId);
+    if (!lot) return;
+
+    // Fill content
+    const img = document.querySelector("#cottage-modal-image img") as HTMLImageElement;
+    img.src = lot.image;
+    img.alt = `Котедж №${lot.number}`;
+
+    const statusEl = document.getElementById("cottage-modal-status")!;
+    const statusMap = {
+      available: { label: locale === "uk" ? "Вільний" : "Available", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      reserved: { label: locale === "uk" ? "Резерв" : "Reserved", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    };
+    const st = statusMap[lot.status as keyof typeof statusMap] || statusMap.available;
+    statusEl.className = `inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.6875rem] font-semibold ${st.cls}`;
+    statusEl.textContent = st.label;
+
+    document.getElementById("cottage-modal-phase")!.textContent = locale === "uk" ? `${lot.phase} черга` : `Phase ${lot.phase}`;
+    document.getElementById("cottage-modal-title")!.textContent = locale === "uk" ? `Котедж №${lot.number}` : `Cottage #${lot.number}`;
+    document.getElementById("cottage-modal-desc")!.textContent = locale === "uk" ? lot.descriptionUk : lot.descriptionEn;
+
+    const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+    document.getElementById("cottage-modal-price")!.textContent = fmt(lot.totalPrice);
+    document.getElementById("cottage-modal-ppsqm")!.textContent = `${fmt(lot.pricePerSqm)}/м²`;
+    document.getElementById("cottage-modal-area")!.textContent = String(lot.area);
+    document.getElementById("cottage-modal-floors")!.textContent = String(lot.floors);
+    document.getElementById("cottage-modal-beds")!.textContent = String(lot.bedrooms);
+
+    // Features
+    const featContainer = document.getElementById("cottage-modal-features")!;
+    featContainer.innerHTML = lot.features.map((f: string) =>
+      `<span class="rounded-[var(--ph-radius-sm)] bg-[var(--ph-bg)] px-2.5 py-1 text-[0.6875rem] text-[var(--ph-ink-soft)]">${f}</span>`
+    ).join("");
+
+    // Show
+    overlay?.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      overlay!.style.opacity = "1";
+      card!.style.opacity = "1";
+      card!.style.transform = "translateY(0) scale(1)";
+    });
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeCottageModal() {
+    if (!overlay || !card) return;
+    overlay.style.opacity = "0";
+    card.style.opacity = "0";
+    card.style.transform = "translateY(4px) scale(0.97)";
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      document.body.style.overflow = "";
+    }, 300);
+  }
+
+  // Triggers from cottage cards
+  document.querySelectorAll("[data-cottage-trigger]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      const lotId = (el as HTMLElement).dataset.cottageTrigger;
+      if (lotId) openCottageModal(lotId);
+    });
+  });
+
+  // Book button inside cottage modal → close cottage modal, open lead modal
+  document.querySelectorAll(".cottage-book-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      closeCottageModal();
+    });
+  });
+
+  closeBtn?.addEventListener("click", closeCottageModal);
+  overlay?.addEventListener("click", (e) => {
+    if (e.target === overlay || (e.target as HTMLElement).id === "cottage-container") closeCottageModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !overlay?.classList.contains("hidden")) closeCottageModal();
+  });
+</script>

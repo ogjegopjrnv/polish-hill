@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Button from "@components/ui/Button.astro";
+import { Home } from "lucide-astro";
+---
+
+<BaseLayout title="Сторінку не знайдено">
+  <section class="section flex min-h-[60vh] items-center justify-center bg-[var(--ph-bg)]">
+    <div class="container-ph text-center">
+      <p class="tabular-nums text-[8rem] font-bold leading-none tracking-tighter text-[var(--ph-forest)]/10" style="font-family: var(--font-display);">
+        404
+      </p>
+      <h1 class="mt-4" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">
+        Сторінку не знайдено
+      </h1>
+      <p class="mt-3 text-[var(--ph-ink-soft)]">
+        Можливо, ця сторінка була видалена або ви ввели неправильну адресу.
+      </p>
+      <div class="mt-8">
+        <Button href="/" variant="primary" size="lg">
+          <Home size={18} strokeWidth={2} />
+          На головну
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
