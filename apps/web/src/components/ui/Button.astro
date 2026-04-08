@@ -1,6 +1,6 @@
 ---
 interface Props {
-  variant?: "primary" | "ghost" | "outline";
+  variant?: "primary" | "ghost" | "outline" | "white";
   size?: "sm" | "md" | "lg";
   href?: string;
   as?: "a" | "button";
@@ -39,6 +39,11 @@ const variants: Record<string, string> = {
     "border-2 border-[var(--ph-border-strong)] text-[var(--ph-ink)]",
     "hover:border-[var(--ph-forest)] hover:text-[var(--ph-forest)]",
     "bg-transparent",
+  ].join(" "),
+  white: [
+    "bg-white text-[var(--ph-forest-deep)] font-semibold",
+    "hover:bg-white/90",
+    "shadow-[0_4px_20px_rgba(255,255,255,0.15)]",
   ].join(" "),
 };
 
