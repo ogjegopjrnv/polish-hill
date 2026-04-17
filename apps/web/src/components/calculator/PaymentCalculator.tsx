@@ -47,7 +47,7 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
   const [area, setArea] = useState(167);
   const [pricePerSqm, setPricePerSqm] = useState(1000);
   const [downPct, setDownPct] = useState(30);
-  const [termMonths, setTermMonths] = useState(30);
+  const [termMonths, setTermMonths] = useState(18);
 
   const total = area * pricePerSqm;
   const downAmount = Math.round(total * (downPct / 100));
@@ -96,7 +96,7 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
           label={i.term}
           value={termMonths}
           min={6}
-          max={36}
+          max={18}
           step={1}
           unit={locale === "uk" ? "міс." : "mo."}
           onChange={setTermMonths}

@@ -31,8 +31,8 @@ function statusLabel(status: string) {
       </h2>
       <p class="mt-4 text-[var(--ph-ink-soft)]">
         {locale === "uk"
-          ? `${availableCount} котеджів вільні. Площа 167 м², 3 поверхи, від $1 000/м².`
-          : `${availableCount} cottages available. 167 m², 3 floors, from $1,000/m².`}
+          ? `${availableCount} котеджів вільні. Площа ~167 м², 3 поверхи, від $1 000/м².`
+          : `${availableCount} cottages available. ~167 m², 3 floors, from $1,000/m².`}
       </p>
     </div>
 
@@ -84,7 +84,7 @@ function statusLabel(status: string) {
                   №{lot.number}
                 </h3>
                 <p class="mt-0.5 text-[0.75rem] text-[var(--ph-ink-muted)]">
-                  {lot.area} м² · {lot.floors} пов. · {lot.bedrooms} спальні
+                  ~{lot.area} м² · {lot.floors} пов. · {lot.bedrooms} спальні
                 </p>
               </div>
               {lot.status !== "sold" && (
@@ -112,8 +112,8 @@ function statusLabel(status: string) {
     <div class="reveal mt-12 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 text-center">
       <p class="text-[0.875rem] text-[var(--ph-ink-soft)]">
         {locale === "uk"
-          ? "I черга (8 котеджів) — повністю завершена та продана."
-          : "Phase I (8 cottages) — fully completed and sold."}
+          ? "I черга (12 котеджів) — повністю завершена та продана."
+          : "Phase I (12 cottages) — fully completed and sold."}
       </p>
     </div>
   </div>

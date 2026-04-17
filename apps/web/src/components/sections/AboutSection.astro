@@ -35,16 +35,16 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </p>
         <p class="mt-3 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "I черга (8 котеджів) — повністю завершена і заселена. II черга (8 котеджів) — активний продаж. Кожен котедж — це 167 м² на 3 поверхи з власною ділянкою."
-            : "Phase I (8 cottages) — fully completed. Phase II (8 cottages) — active sales. Each cottage is 167 m² on 3 floors with own land plot."}
+            ? "I черга (12 котеджів) — повністю завершена і заселена. II черга (5 котеджів) — активний продаж. Кожен котедж — це ~167 м² на 3 поверхи з власною ділянкою 10 соток."
+            : "Phase I (12 cottages) — fully completed. Phase II (5 cottages) — active sales. Each cottage is ~167 m² on 3 floors with own 10 sotka land plot."}
         </p>
 
         <div class="mt-8 grid grid-cols-2 gap-4">
           {[
             { value: "2019", label: locale === "uk" ? "Рік заснування" : "Founded" },
-            { value: "16", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
-            { value: "167 м²", label: locale === "uk" ? "Площа кожного" : "Each cottage" },
-            { value: "5 га", label: locale === "uk" ? "Територія" : "Territory" },
+            { value: "17", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
+            { value: "~167 м²", label: locale === "uk" ? "Площа (орієнтовно)" : "Area (approx.)" },
+            { value: "8 га", label: locale === "uk" ? "Територія" : "Territory" },
           ].map(({ value, label }) => (
             <div class="rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-4 text-center">
               <span class="tabular-nums text-[1.5rem] font-bold text-[var(--ph-forest)]">{value}</span>

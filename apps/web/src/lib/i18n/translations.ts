@@ -19,7 +19,7 @@ export const translations = {
       eyebrow: "II черга \u2022 Старт продажів",
       heading: "Котеджне містечко серед лісу за 15 хвилин від центру Києва",
       subtitle:
-        "Безпроцентна розстрочка 2.5 роки. Особливі умови для військовослужбовців.",
+        "Безпроцентна розстрочка 1.5 року. Особливі умови для військовослужбовців.",
     },
     footer: {
       navigation: "Навігація",
@@ -56,7 +56,7 @@ export const translations = {
       heading:
         "A cottage community in the forest, 15 minutes from Kyiv city center",
       subtitle:
-        "Interest-free installment for 2.5 years. Special terms for military personnel.",
+        "Interest-free installment for 1.5 years. Special terms for military personnel.",
     },
     footer: {
       navigation: "Navigation",

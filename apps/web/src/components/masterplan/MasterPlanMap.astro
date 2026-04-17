@@ -4,19 +4,24 @@ import type { Locale } from "@lib/i18n/translations";
 
 const locale = (Astro.currentLocale ?? "uk") as Locale;
 
-// SVG layout: 2 rows of 8 cottages (Phase I top, Phase II bottom)
-// Each cottage is a rect in the SVG
-const COL_W = 100;
-const COL_GAP = 12;
-const ROW_H = 140;
-const ROW_GAP = 60;
+// Phase I: 12 cottages (2 rows of 6)
+// Phase II: 5 cottages (1 row)
+const COL_W = 90;
+const COL_GAP = 10;
+const ROW_H = 120;
+const ROW_GAP = 50;
 const PAD = 40;
 
 const phase1 = lots.filter((l) => l.phase === 1);
 const phase2 = lots.filter((l) => l.phase === 2);
 
-const svgW = PAD * 2 + phase1.length * COL_W + (phase1.length - 1) * COL_GAP;
-const svgH = PAD * 2 + 2 * ROW_H + ROW_GAP + 60; // +60 for labels
+// Phase I in 2 rows of 6
+const phase1Row1 = phase1.slice(0, 6);
+const phase1Row2 = phase1.slice(6, 12);
+
+const maxCols = Math.max(phase1Row1.length, phase2.length);
+const svgW = PAD * 2 + maxCols * COL_W + (maxCols - 1) * COL_GAP;
+const svgH = PAD * 2 + 3 * ROW_H + 2 * ROW_GAP + 80; // 3 rows + labels
 
 function lotColor(status: string) {
   return {
@@ -45,85 +50,122 @@ function lotFill(status: string) {
     {/* Background */}
     <rect width={svgW} height={svgH} rx="16" fill="var(--ph-bg)" />
 
-    {/* Road */}
-    <rect x={PAD - 10} y={PAD + ROW_H + 10} width={svgW - PAD * 2 + 20} height={ROW_GAP - 20} rx="6" fill="var(--ph-bg-alt)" stroke="var(--ph-border-strong)" stroke-width="1" stroke-dasharray="6 4" />
-    <text x={svgW / 2} y={PAD + ROW_H + ROW_GAP / 2 + 4} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="11" font-family="var(--font-body)">
-      {locale === "uk" ? "Внутрішня дорога" : "Internal road"}
-    </text>
-
     {/* Phase I label */}
     <text x={PAD} y={PAD - 10} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
-      {locale === "uk" ? "I ЧЕРГА" : "PHASE I"}
+      {locale === "uk" ? "I ЧЕРГА (12 котеджів)" : "PHASE I (12 cottages)"}
     </text>
 
-    {/* Phase I lots */}
-    {phase1.map((lot, i) => {
+    {/* Phase I Row 1 (lots 1-6) */}
+    {phase1Row1.map((lot, i) => {
       const x = PAD + i * (COL_W + COL_GAP);
       const y = PAD;
       return (
-        <a href={lot.status !== "sold" ? `/lots/${lot.id}` : undefined} class="group">
+        <g class="group cursor-pointer" data-lot-id={lot.id}>
           <rect
             x={x} y={y} width={COL_W} height={ROW_H} rx="8"
             fill={lotFill(lot.status)}
             stroke={lotColor(lot.status)}
             stroke-width="2"
-            class="transition-all duration-200 hover:brightness-95"
+            class="transition-all duration-200 group-hover:brightness-95"
           />
-          {/* Number */}
-          <text x={x + COL_W / 2} y={y + 35} text-anchor="middle" fill={lotColor(lot.status)} font-size="22" font-weight="700" font-family="var(--font-display)">
+          <text x={x + COL_W / 2} y={y + 30} text-anchor="middle" fill={lotColor(lot.status)} font-size="20" font-weight="700" font-family="var(--font-display)">
             #{lot.number}
           </text>
-          {/* Area */}
-          <text x={x + COL_W / 2} y={y + 58} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="10" font-family="var(--font-body)">
-            {lot.area} м²
+          <text x={x + COL_W / 2} y={y + 50} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
+            ~{lot.area} м²
           </text>
-          {/* Status */}
-          <text x={x + COL_W / 2} y={y + ROW_H - 18} text-anchor="middle" fill={lotColor(lot.status)} font-size="10" font-weight="600" font-family="var(--font-body)">
+          <text x={x + COL_W / 2} y={y + ROW_H - 15} text-anchor="middle" fill={lotColor(lot.status)} font-size="9" font-weight="600" font-family="var(--font-body)">
             {locale === "uk" ? statusLabelUk(lot.status) : lot.status}
           </text>
-          {/* Price (if not sold) */}
           {lot.status !== "sold" && (
-            <text x={x + COL_W / 2} y={y + ROW_H - 35} text-anchor="middle" fill="var(--ph-ink)" font-size="9" font-family="var(--font-mono)">
+            <text x={x + COL_W / 2} y={y + ROW_H - 32} text-anchor="middle" fill="var(--ph-ink)" font-size="8" font-family="var(--font-mono)">
               {formatPrice(lot.totalPrice)}
             </text>
           )}
-        </a>
+        </g>
       );
     })}
 
+    {/* Phase I Row 2 (lots 7-12) */}
+    {phase1Row2.map((lot, i) => {
+      const x = PAD + i * (COL_W + COL_GAP);
+      const y = PAD + ROW_H + 15;
+      return (
+        <g class="group cursor-pointer" data-lot-id={lot.id}>
+          <rect
+            x={x} y={y} width={COL_W} height={ROW_H} rx="8"
+            fill={lotFill(lot.status)}
+            stroke={lotColor(lot.status)}
+            stroke-width="2"
+            class="transition-all duration-200 group-hover:brightness-95"
+          />
+          <text x={x + COL_W / 2} y={y + 30} text-anchor="middle" fill={lotColor(lot.status)} font-size="20" font-weight="700" font-family="var(--font-display)">
+            #{lot.number}
+          </text>
+          <text x={x + COL_W / 2} y={y + 50} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
+            ~{lot.area} м²
+          </text>
+          <text x={x + COL_W / 2} y={y + ROW_H - 15} text-anchor="middle" fill={lotColor(lot.status)} font-size="9" font-weight="600" font-family="var(--font-body)">
+            {locale === "uk" ? statusLabelUk(lot.status) : lot.status}
+          </text>
+          {lot.status !== "sold" && (
+            <text x={x + COL_W / 2} y={y + ROW_H - 32} text-anchor="middle" fill="var(--ph-ink)" font-size="8" font-family="var(--font-mono)">
+              {formatPrice(lot.totalPrice)}
+            </text>
+          )}
+        </g>
+      );
+    })}
+
+    {/* Road */}
+    <rect
+      x={PAD - 10}
+      y={PAD + 2 * ROW_H + 25}
+      width={svgW - PAD * 2 + 20}
+      height={ROW_GAP - 10}
+      rx="6"
+      fill="var(--ph-bg-alt)"
+      stroke="var(--ph-border-strong)"
+      stroke-width="1"
+      stroke-dasharray="6 4"
+    />
+    <text x={svgW / 2} y={PAD + 2 * ROW_H + 25 + (ROW_GAP - 10) / 2 + 4} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="10" font-family="var(--font-body)">
+      {locale === "uk" ? "Внутрішня дорога" : "Internal road"}
+    </text>
+
     {/* Phase II label */}
-    <text x={PAD} y={PAD + ROW_H + ROW_GAP + 2} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
-      {locale === "uk" ? "II ЧЕРГА" : "PHASE II"}
+    <text x={PAD} y={PAD + 2 * ROW_H + ROW_GAP + 25} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
+      {locale === "uk" ? "II ЧЕРГА (5 котеджів) — СТАРТ ПРОДАЖІВ" : "PHASE II (5 cottages) — SALES OPEN"}
     </text>
 
     {/* Phase II lots */}
     {phase2.map((lot, i) => {
       const x = PAD + i * (COL_W + COL_GAP);
-      const y = PAD + ROW_H + ROW_GAP + 12;
+      const y = PAD + 2 * ROW_H + ROW_GAP + 40;
       return (
-        <a href={lot.status !== "sold" ? `/lots/${lot.id}` : undefined} class="group">
+        <g class="group cursor-pointer" data-lot-id={lot.id}>
           <rect
             x={x} y={y} width={COL_W} height={ROW_H} rx="8"
             fill={lotFill(lot.status)}
             stroke={lotColor(lot.status)}
-            stroke-width="2"
-            class="transition-all duration-200 hover:brightness-95"
+            stroke-width="2.5"
+            class="transition-all duration-200 group-hover:brightness-95"
           />
-          <text x={x + COL_W / 2} y={y + 35} text-anchor="middle" fill={lotColor(lot.status)} font-size="22" font-weight="700" font-family="var(--font-display)">
+          <text x={x + COL_W / 2} y={y + 30} text-anchor="middle" fill={lotColor(lot.status)} font-size="20" font-weight="700" font-family="var(--font-display)">
             #{lot.number}
           </text>
-          <text x={x + COL_W / 2} y={y + 58} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="10" font-family="var(--font-body)">
-            {lot.area} м²
+          <text x={x + COL_W / 2} y={y + 50} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
+            ~{lot.area} м²
           </text>
           {lot.status !== "sold" && (
-            <text x={x + COL_W / 2} y={y + ROW_H - 35} text-anchor="middle" fill="var(--ph-ink)" font-size="9" font-family="var(--font-mono)">
+            <text x={x + COL_W / 2} y={y + ROW_H - 32} text-anchor="middle" fill="var(--ph-ink)" font-size="8" font-family="var(--font-mono)">
               {formatPrice(lot.totalPrice)}
             </text>
           )}
-          <text x={x + COL_W / 2} y={y + ROW_H - 18} text-anchor="middle" fill={lotColor(lot.status)} font-size="10" font-weight="600" font-family="var(--font-body)">
+          <text x={x + COL_W / 2} y={y + ROW_H - 15} text-anchor="middle" fill={lotColor(lot.status)} font-size="9" font-weight="600" font-family="var(--font-body)">
             {locale === "uk" ? statusLabelUk(lot.status) : lot.status}
           </text>
-        </a>
+        </g>
       );
     })}
 
@@ -133,12 +175,12 @@ function lotFill(status: string) {
       { color: "#c8924a", fill: "#fef3e0", label: locale === "uk" ? "Резерв" : "Reserved" },
       { color: "#c4c4c0", fill: "#f0efed", label: locale === "uk" ? "Продано" : "Sold" },
     ].map(({ color, fill, label }, i) => {
-      const lx = PAD + i * 120;
+      const lx = PAD + i * 110;
       const ly = svgH - 30;
       return (
         <g>
-          <rect x={lx} y={ly} width="16" height="16" rx="3" fill={fill} stroke={color} stroke-width="1.5" />
-          <text x={lx + 22} y={ly + 12} fill="var(--ph-ink-soft)" font-size="11" font-family="var(--font-body)">
+          <rect x={lx} y={ly} width="14" height="14" rx="3" fill={fill} stroke={color} stroke-width="1.5" />
+          <text x={lx + 20} y={ly + 11} fill="var(--ph-ink-soft)" font-size="10" font-family="var(--font-body)">
             {label}
           </text>
         </g>
@@ -146,3 +188,15 @@ function lotFill(status: string) {
     })}
   </svg>
 </div>
+
+<script>
+  // Click handler for cottage selection
+  document.querySelectorAll('[data-lot-id]').forEach(el => {
+    el.addEventListener('click', () => {
+      const lotId = el.getAttribute('data-lot-id');
+      if (lotId) {
+        window.dispatchEvent(new CustomEvent('open-cottage-modal', { detail: { lotId } }));
+      }
+    });
+  });
+</script>

@@ -10,13 +10,13 @@ const steps = locale === "uk"
     { num: "01", title: "Обрати котедж", text: "Перегляньте каталог або відвідайте містечко." },
     { num: "02", title: "Підписати договір", text: "Фіксація ціни в доларах." },
     { num: "03", title: "Перший внесок", text: "Від 30%. Решта — безпроцентна розстрочка." },
-    { num: "04", title: "Щомісячні платежі", text: "Рівними частинами 2.5 роки. Без банків." },
+    { num: "04", title: "Щомісячні платежі", text: "Рівними частинами 1.5 року (18 міс). Без банків." },
   ]
   : [
     { num: "01", title: "Choose", text: "Browse the catalog or visit." },
     { num: "02", title: "Contract", text: "Price fixed in USD." },
     { num: "03", title: "Down payment", text: "From 30%. Rest interest-free." },
-    { num: "04", title: "Monthly", text: "Equal parts 2.5 years. No banks." },
+    { num: "04", title: "Monthly", text: "Equal parts 1.5 years (18 mo). No banks." },
   ];
 ---
 
@@ -27,7 +27,7 @@ const steps = locale === "uk"
         {locale === "uk" ? "Фінанси" : "Finance"}
       </span>
       <h2 class="mt-3">
-        {locale === "uk" ? "0% розстрочка від забудовника" : "0% installment from developer"}
+        {locale === "uk" ? "0% розстрочка на 1.5 року" : "0% installment for 1.5 years"}
       </h2>
     </div>
 
