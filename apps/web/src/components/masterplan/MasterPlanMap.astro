@@ -21,7 +21,7 @@ const phase1Row2 = phase1.slice(6, 12);
 
 const maxCols = Math.max(phase1Row1.length, phase2.length);
 const svgW = PAD * 2 + maxCols * COL_W + (maxCols - 1) * COL_GAP;
-const svgH = PAD * 2 + 3 * ROW_H + 2 * ROW_GAP + 80; // 3 rows + labels
+const svgH = PAD * 2 + 3 * ROW_H + 2 * ROW_GAP + 110; // 3 rows + labels + extra spacing
 
 function lotColor(status: string) {
   return {
@@ -134,14 +134,14 @@ function lotFill(status: string) {
     </text>
 
     {/* Phase II label */}
-    <text x={PAD} y={PAD + 2 * ROW_H + ROW_GAP + 25} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
+    <text x={PAD} y={PAD + 2 * ROW_H + ROW_GAP + 45} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
       {locale === "uk" ? "II ЧЕРГА (5 котеджів) — СТАРТ ПРОДАЖІВ" : "PHASE II (5 cottages) — SALES OPEN"}
     </text>
 
     {/* Phase II lots */}
     {phase2.map((lot, i) => {
       const x = PAD + i * (COL_W + COL_GAP);
-      const y = PAD + 2 * ROW_H + ROW_GAP + 40;
+      const y = PAD + 2 * ROW_H + ROW_GAP + 60;
       return (
         <g class="group cursor-pointer" data-lot-id={lot.id}>
           <rect
