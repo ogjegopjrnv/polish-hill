@@ -12,21 +12,46 @@ const stats = [
   { value: "10 сот", label: locale === "uk" ? "Ділянка кожного" : "Plot size each" },
   { value: "100%", label: locale === "uk" ? "Юридична прозорість" : "Legal transparency" },
 ];
+
+const heroImages = [
+  "/images/client/hero-1.jpg",
+  "/images/client/hero-2.jpg",
+];
 ---
 
 <section class="relative min-h-dvh overflow-hidden" aria-label="Hero">
-  <!-- Background image -->
-  <div class="absolute inset-0">
-    <img
-      src="/images/client/ph-14.jpg"
-      alt="Polish Hill — котеджне містечко"
-      class="h-full w-full object-cover object-center"
-      loading="eager"
-      decoding="async"
-    />
-    <!-- Cinematic gradient overlay — stronger for readability -->
+  <!-- Background slideshow -->
+  <div class="absolute inset-0" id="hero-slideshow">
+    {heroImages.map((src, idx) => (
+      <img
+        src={src}
+        alt={`Polish Hill — котеджне містечко ${idx + 1}`}
+        class:list={[
+          "hero-slide absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-[1500ms] ease-[var(--ph-ease)]",
+          idx === 0 ? "opacity-100" : "opacity-0",
+        ]}
+        loading={idx === 0 ? "eager" : "lazy"}
+        decoding="async"
+        data-slide={idx}
+      />
+    ))}
+    <!-- Cinematic gradient overlay -->
     <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/80"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent"></div>
+  </div>
+
+  <!-- Slide indicators -->
+  <div class="absolute bottom-28 left-1/2 z-20 flex -translate-x-1/2 gap-2 md:bottom-8 md:left-auto md:right-8 md:translate-x-0">
+    {heroImages.map((_, idx) => (
+      <button
+        class:list={[
+          "hero-dot h-2 w-2 rounded-full transition-all duration-300",
+          idx === 0 ? "bg-white w-6" : "bg-white/40 hover:bg-white/60",
+        ]}
+        data-slide-to={idx}
+        aria-label={`Слайд ${idx + 1}`}
+      />
+    ))}
   </div>
 
   <!-- Content positioned at bottom-left -->
@@ -91,3 +116,55 @@ const stats = [
     </div>
   </div>
 </section>
+
+<script>
+  const slides = document.querySelectorAll<HTMLImageElement>('.hero-slide');
+  const dots = document.querySelectorAll<HTMLButtonElement>('.hero-dot');
+  const totalSlides = slides.length;
+  let current = 0;
+  let interval: ReturnType<typeof setInterval>;
+
+  function goToSlide(idx: number) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('opacity-100', i === idx);
+      s.classList.toggle('opacity-0', i !== idx);
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle('bg-white', i === idx);
+      d.classList.toggle('w-6', i === idx);
+      d.classList.toggle('bg-white/40', i !== idx);
+      d.classList.toggle('w-2', i !== idx);
+    });
+    current = idx;
+  }
+
+  function nextSlide() {
+    goToSlide((current + 1) % totalSlides);
+  }
+
+  function startAutoplay() {
+    interval = setInterval(nextSlide, 6000);
+  }
+
+  function stopAutoplay() {
+    clearInterval(interval);
+  }
+
+  // Dot click handlers
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.slideTo || '0', 10);
+      goToSlide(idx);
+      stopAutoplay();
+      startAutoplay();
+    });
+  });
+
+  // Start autoplay
+  startAutoplay();
+
+  // Pause on hover (optional UX improvement)
+  const slideshow = document.getElementById('hero-slideshow');
+  slideshow?.addEventListener('mouseenter', stopAutoplay);
+  slideshow?.addEventListener('mouseleave', startAutoplay);
+</script>
