@@ -84,7 +84,7 @@ function statusLabel(status: string) {
                   №{lot.number}
                 </h3>
                 <p class="mt-0.5 text-[0.75rem] text-[var(--ph-ink-muted)]">
-                  ~{lot.area} м² · {lot.floors} пов. · {lot.bedrooms} спальні
+                  {lot.area} м² · {lot.floors} пов. · Діл. {(lot.landArea / 100).toFixed(2)} сот
                 </p>
               </div>
               {lot.status !== "sold" && (

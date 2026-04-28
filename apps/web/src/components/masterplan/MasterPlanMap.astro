@@ -135,7 +135,7 @@ function lotFill(status: string) {
 
     {/* Phase II label */}
     <text x={PAD} y={PAD + 2 * ROW_H + ROW_GAP + 45} fill="var(--ph-ink-soft)" font-size="13" font-weight="600" font-family="var(--font-body)">
-      {locale === "uk" ? "II ЧЕРГА (5 котеджів) — СТАРТ ПРОДАЖІВ" : "PHASE II (5 cottages) — SALES OPEN"}
+      {locale === "uk" ? "II ЧЕРГА (5 таунхаусів) — СТАРТ ПРОДАЖІВ" : "PHASE II (5 townhouses) — SALES OPEN"}
     </text>
 
     {/* Phase II lots */}
@@ -154,8 +154,11 @@ function lotFill(status: string) {
           <text x={x + COL_W / 2} y={y + 30} text-anchor="middle" fill={lotColor(lot.status)} font-size="20" font-weight="700" font-family="var(--font-display)">
             #{lot.number}
           </text>
-          <text x={x + COL_W / 2} y={y + 50} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
-            ~{lot.area} м²
+          <text x={x + COL_W / 2} y={y + 48} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
+            {lot.area} м²
+          </text>
+          <text x={x + COL_W / 2} y={y + 62} text-anchor="middle" fill="var(--ph-forest-light)" font-size="8" font-family="var(--font-body)">
+            {locale === "uk" ? "Ділянка:" : "Plot:"} {(lot.landArea / 100).toFixed(2)} сот
           </text>
           {lot.status !== "sold" && (
             <text x={x + COL_W / 2} y={y + ROW_H - 32} text-anchor="middle" fill="var(--ph-ink)" font-size="8" font-family="var(--font-mono)">
