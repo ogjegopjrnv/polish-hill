@@ -36,8 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await sendTelegramNotification({ name, phone, preferred_time, utm_source, source_page });
 
     return res.status(201).json({ ok: true, id: result.rows[0]?.id });
-  } catch (err) {
-    console.error("Lead submission error:", err);
+  } catch {
     return res.status(500).json({ error: "Server error" });
   }
 }
@@ -45,10 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 async function sendTelegramNotification(lead: Record<string, string | null | undefined>) {
   const token = process.env.TG_BOT_TOKEN;
   const chatIds = (process.env.TG_CHAT_IDS || "").split(",").filter(Boolean);
-  if (!token || chatIds.length === 0) {
-    console.warn("TG notification skipped: missing TG_BOT_TOKEN or TG_CHAT_IDS");
-    return;
-  }
+  if (!token || chatIds.length === 0) return;
 
   const lines = [
     `🏡 <b>Новий лід — Polish Hill</b>`,
@@ -68,22 +64,13 @@ async function sendTelegramNotification(lead: Record<string, string | null | und
 
   const text = lines.join("\n");
 
-  const results = await Promise.allSettled(
+  await Promise.allSettled(
     chatIds.map((chatId) =>
       fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: chatId.trim(), text, parse_mode: "HTML" }),
-      }).then(async (r) => {
-        if (!r.ok) {
-          const body = await r.text().catch(() => "");
-          console.error(`TG send failed for ${chatId}: ${r.status} ${body}`);
-        }
       })
     )
   );
-
-  for (const r of results) {
-    if (r.status === "rejected") console.error("TG fetch error:", r.reason);
-  }
 }

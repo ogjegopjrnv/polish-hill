@@ -32,23 +32,25 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </svg>
       </button>
 
-      <!-- Eyebrow -->
-      <div class="mb-1">
-        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-[var(--ph-forest)]">
-          {locale === "uk" ? "Зворотний зв\u2019язок" : "Get in touch"}
-        </span>
+      <div id="modal-intro">
+        <!-- Eyebrow -->
+        <div class="mb-1">
+          <span class="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-[var(--ph-forest)]">
+            {locale === "uk" ? "Зворотний зв\u2019язок" : "Get in touch"}
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h3 id="modal-title" class="text-2xl">
+          {locale === "uk" ? "Записатись на огляд" : "Book a tour"}
+        </h3>
+
+        <p class="mt-2 text-sm leading-relaxed text-[var(--ph-ink-muted)]">
+          {locale === "uk"
+            ? "Залиште ваші контакти — менеджер зателефонує протягом 15 хвилин"
+            : "Leave your contacts — our manager will call within 15 minutes"}
+        </p>
       </div>
-
-      <!-- Title -->
-      <h3 id="modal-title" class="text-2xl">
-        {locale === "uk" ? "Записатись на огляд" : "Book a tour"}
-      </h3>
-
-      <p class="mt-2 text-sm leading-relaxed text-[var(--ph-ink-muted)]">
-        {locale === "uk"
-          ? "Залиште ваші контакти — менеджер зателефонує протягом 15 хвилин"
-          : "Leave your contacts — our manager will call within 15 minutes"}
-      </p>
 
       <!-- Form -->
       <form id="modal-lead-form" class="mt-8 flex flex-col gap-4" novalidate>
@@ -112,11 +114,22 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </button>
       </form>
 
-      <p class="mt-4 text-center text-[0.6875rem] text-[var(--ph-ink-muted)]">
+      <p id="modal-privacy-note" class="mt-4 text-center text-[0.6875rem] text-[var(--ph-ink-muted)]">
         {locale === "uk"
           ? "Натискаючи, ви погоджуєтесь з політикою конфіденційності"
           : "By clicking, you agree to our privacy policy"}
       </p>
+
+      <!-- Success state (hidden by default) -->
+      <div id="modal-success" class="hidden py-8 text-center">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--ph-forest)]/10">
+          <svg class="h-8 w-8 text-[var(--ph-forest)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+        <p class="text-xl font-semibold text-[var(--ph-forest)]">Дякуємо!</p>
+        <p class="mt-2 text-sm text-[var(--ph-ink-muted)]">Менеджер зателефонує вам найближчим часом.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -198,11 +211,13 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
       });
 
       if (res.ok) {
-        // Analytics events
         if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
         if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { currency: 'USD' });
 
-        form.innerHTML = '<div class="py-8 text-center"><p class="text-xl font-semibold text-[var(--ph-forest)]">Дякуємо!</p><p class="mt-2 text-sm text-[var(--ph-ink-muted)]">Менеджер зателефонує вам найближчим часом.</p></div>';
+        document.getElementById('modal-intro')!.style.display = 'none';
+        form.style.display = 'none';
+        document.getElementById('modal-privacy-note')!.style.display = 'none';
+        document.getElementById('modal-success')!.classList.remove('hidden');
       } else {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
