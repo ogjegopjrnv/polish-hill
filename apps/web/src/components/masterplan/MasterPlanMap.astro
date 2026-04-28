@@ -40,10 +40,85 @@ function lotFill(status: string) {
 }
 ---
 
-<div class="overflow-x-auto rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-4 md:p-8">
+<div class="rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-4 md:p-8">
+  <div class="md:hidden">
+    <p class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--ph-ink-soft)]">
+      {locale === "uk" ? "I черга (12 котеджів)" : "Phase I (12 cottages)"}
+    </p>
+    <div class="mt-3 grid grid-cols-3 gap-2">
+      {phase1.map((lot) => (
+        <button
+          type="button"
+          data-lot-id={lot.id}
+          class="min-h-[4.75rem] rounded-[var(--ph-radius-md)] border-2 p-2 text-center transition-transform active:scale-[0.98]"
+          style={`background:${lotFill(lot.status)};border-color:${lotColor(lot.status)};`}
+        >
+          <span class="block text-base font-bold" style={`color:${lotColor(lot.status)};font-family:var(--font-display);`}>
+            #{lot.number}
+          </span>
+          <span class="mt-1 block text-[0.6875rem] leading-tight text-[var(--ph-ink-muted)]">
+            ~{lot.area} м²
+          </span>
+          <span class="mt-2 block text-[0.6875rem] font-semibold leading-tight" style={`color:${lotColor(lot.status)};`}>
+            {locale === "uk" ? statusLabelUk(lot.status) : lot.status}
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <div class="my-4 rounded-[var(--ph-radius-md)] border border-dashed border-[var(--ph-border-strong)] bg-[var(--ph-bg-alt)] py-2 text-center text-[0.75rem] text-[var(--ph-ink-muted)]">
+      {locale === "uk" ? "Внутрішня дорога" : "Internal road"}
+    </div>
+
+    <p class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--ph-ink)]">
+      {locale === "uk" ? "II черга (5 таунхаусів) — старт продажів" : "Phase II (5 townhouses) — sales open"}
+    </p>
+    <div class="mt-3 grid grid-cols-2 gap-2">
+      {phase2.map((lot) => (
+        <button
+          type="button"
+          data-lot-id={lot.id}
+          class="min-h-[6.75rem] rounded-[var(--ph-radius-md)] border-2 p-3 text-center transition-transform active:scale-[0.98]"
+          style={`background:${lotFill(lot.status)};border-color:${lotColor(lot.status)};`}
+        >
+          <span class="block text-2xl font-bold" style={`color:${lotColor(lot.status)};font-family:var(--font-display);`}>
+            #{lot.number}
+          </span>
+          <span class="mt-1 block text-[0.75rem] leading-tight text-[var(--ph-ink-muted)]">
+            {lot.area} м²
+          </span>
+          <span class="mt-1 block text-[0.6875rem] leading-tight text-[var(--ph-forest-light)]">
+            {locale === "uk" ? "Ділянка:" : "Plot:"} {(lot.landArea / 100).toFixed(2)} сот
+          </span>
+          {lot.status !== "sold" && (
+            <span class="mt-2 block text-[0.6875rem] leading-tight text-[var(--ph-ink)]" style="font-family:var(--font-mono);">
+              {formatPrice(lot.totalPrice)}
+            </span>
+          )}
+          <span class="mt-1 block text-[0.75rem] font-semibold leading-tight" style={`color:${lotColor(lot.status)};`}>
+            {locale === "uk" ? statusLabelUk(lot.status) : lot.status}
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[0.75rem] text-[var(--ph-ink-soft)]">
+      {[
+        { color: "#4a7c59", fill: "#e8f5ec", label: locale === "uk" ? "Вільний" : "Available" },
+        { color: "#c8924a", fill: "#fef3e0", label: locale === "uk" ? "Резерв" : "Reserved" },
+        { color: "#c4c4c0", fill: "#f0efed", label: locale === "uk" ? "Продано" : "Sold" },
+      ].map(({ color, fill, label }) => (
+        <span class="inline-flex items-center gap-2">
+          <span class="h-3.5 w-3.5 rounded-[4px] border" style={`background:${fill};border-color:${color};`}></span>
+          {label}
+        </span>
+      ))}
+    </div>
+  </div>
+
   <svg
     viewBox={`0 0 ${svgW} ${svgH}`}
-    class="mx-auto w-full max-w-4xl"
+    class="mx-auto hidden w-full max-w-4xl md:block"
     role="img"
     aria-label={locale === "uk" ? "Генплан містечка Polish Hill" : "Polish Hill master plan"}
   >

@@ -30,9 +30,9 @@ const pois = [
             : "Bogatyrska 30a — city meets nature. Forest, lake and full infrastructure nearby."}
         </p>
 
-        <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div class="mt-10 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:grid-cols-3">
           {pois.map(({ icon, label, time, color }) => (
-            <div class="flex items-center gap-3 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] px-4 py-3.5">
+            <div class="flex items-start gap-3 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] px-4 py-3.5">
               <div class:list={["shrink-0", color]}>
                 {icon === "trees" && <Trees size={20} strokeWidth={1.5} />}
                 {icon === "school" && <School size={20} strokeWidth={1.5} />}
@@ -42,7 +42,7 @@ const pois = [
                 {icon === "city" && <Building2 size={20} strokeWidth={1.5} />}
               </div>
               <div class="min-w-0">
-                <p class="truncate text-[0.8125rem] font-medium text-[var(--ph-ink)]">{label}</p>
+                <p class="text-[0.8125rem] font-medium leading-snug text-[var(--ph-ink)]">{label}</p>
                 <p class="text-[0.75rem] text-[var(--ph-ink-muted)]">{time}</p>
               </div>
             </div>
