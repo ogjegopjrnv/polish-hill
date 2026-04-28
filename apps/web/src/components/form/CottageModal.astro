@@ -177,6 +177,12 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
     });
   });
 
+  // Triggers from the SVG master plan
+  window.addEventListener("open-cottage-modal", (event) => {
+    const lotId = (event as CustomEvent<{ lotId?: string }>).detail?.lotId;
+    if (lotId) openCottageModal(lotId);
+  });
+
   // Book button inside cottage modal → close cottage modal, open lead modal
   document.querySelectorAll(".cottage-book-btn").forEach((btn) => {
     btn.addEventListener("click", () => {

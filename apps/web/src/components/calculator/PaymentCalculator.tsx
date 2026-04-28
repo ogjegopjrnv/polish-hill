@@ -7,8 +7,7 @@ interface Props {
 const t = {
   uk: {
     title: "Калькулятор платежів",
-    area: "Площа, м²",
-    price: "Ціна за м², $",
+    homes: "Кількість будинків",
     downPayment: "Перший внесок, %",
     term: "Термін розстрочки, міс.",
     totalPrice: "Загальна вартість",
@@ -20,8 +19,7 @@ const t = {
   },
   en: {
     title: "Payment calculator",
-    area: "Area, m²",
-    price: "Price per m², $",
+    homes: "Homes",
     downPayment: "Down payment, %",
     term: "Term, months",
     totalPrice: "Total price",
@@ -32,6 +30,9 @@ const t = {
     cta: "Get an offer",
   },
 };
+
+const HOUSE_AREA = 170;
+const PRICE_PER_SQM = 1000;
 
 function formatUSD(n: number) {
   return new Intl.NumberFormat("en-US", {
@@ -44,12 +45,11 @@ function formatUSD(n: number) {
 export default function PaymentCalculator({ locale = "uk" }: Props) {
   const i = t[locale];
 
-  const [area, setArea] = useState(170);
-  const [pricePerSqm, setPricePerSqm] = useState(1000);
+  const [homes, setHomes] = useState(1);
   const [downPct, setDownPct] = useState(30);
   const [termMonths, setTermMonths] = useState(18);
 
-  const total = area * pricePerSqm;
+  const total = homes * HOUSE_AREA * PRICE_PER_SQM;
   const downAmount = Math.round(total * (downPct / 100));
   const remaining = total - downAmount;
   const monthly = termMonths > 0 ? Math.round(remaining / termMonths) : 0;
@@ -66,27 +66,18 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
       {/* Sliders */}
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <SliderField
-          label={i.area}
-          value={area}
-          min={100}
-          max={250}
+          label={i.homes}
+          value={homes}
+          min={1}
+          max={5}
           step={1}
-          unit="м²"
-          onChange={setArea}
-        />
-        <SliderField
-          label={i.price}
-          value={pricePerSqm}
-          min={800}
-          max={1500}
-          step={50}
-          unit="$"
-          onChange={setPricePerSqm}
+          unit={locale === "uk" ? "шт." : "pcs."}
+          onChange={setHomes}
         />
         <SliderField
           label={i.downPayment}
           value={downPct}
-          min={0}
+          min={30}
           max={100}
           step={5}
           unit="%"
@@ -140,7 +131,7 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
               document.body.style.overflow = "hidden";
             }
           }}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--ph-radius-lg)] px-8 text-sm font-semibold text-white transition-all duration-300 active:scale-[0.98]"
+          className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-[var(--ph-radius-lg)] px-8 text-sm font-semibold text-white transition-all duration-300 active:scale-[0.98]"
           style={{
             background: "var(--ph-forest)",
             boxShadow: "0 4px 12px rgba(45,74,58,0.25)",
