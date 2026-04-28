@@ -56,3 +56,52 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
     </p>
   </div>
 </section>
+
+<script>
+  const form = document.getElementById('quick-lead-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '...';
+
+    const fd = new FormData(form);
+
+    const utmParams: Record<string, string> = {};
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${key}=([^;]*)`));
+      if (match) utmParams[key] = decodeURIComponent(match[1]);
+    }
+
+    const payload = {
+      name: fd.get('name'),
+      phone: fd.get('phone'),
+      preferred_time: 'any',
+      website: fd.get('website'),
+      source_page: window.location.pathname,
+      ...utmParams,
+    };
+
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
+        if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { currency: 'USD' });
+
+        form.innerHTML = '<p class="text-center text-xl font-semibold text-white">Дякуємо! Менеджер зателефонує вам найближчим часом.</p>';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    } catch {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+  });
+</script>

@@ -162,4 +162,54 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeModal();
   });
+
+  // --- Form submission ---
+  const form = document.getElementById('modal-lead-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '...';
+
+    const fd = new FormData(form);
+
+    // Read UTM from cookies
+    const utmParams: Record<string, string> = {};
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${key}=([^;]*)`));
+      if (match) utmParams[key] = decodeURIComponent(match[1]);
+    }
+
+    const payload = {
+      name: fd.get('name'),
+      phone: fd.get('phone'),
+      preferred_time: fd.get('preferred_time'),
+      website: fd.get('website'),
+      source_page: window.location.pathname,
+      ...utmParams,
+    };
+
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        // Analytics events
+        if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
+        if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { currency: 'USD' });
+
+        form.innerHTML = '<div class="py-8 text-center"><p class="text-xl font-semibold text-[var(--ph-forest)]">Дякуємо!</p><p class="mt-2 text-sm text-[var(--ph-ink-muted)]">Менеджер зателефонує вам найближчим часом.</p></div>';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    } catch {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+  });
 </script>

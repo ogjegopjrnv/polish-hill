@@ -27,12 +27,12 @@ function statusLabel(status: string) {
         {locale === "uk" ? "II черга — продаж відкрито" : "Phase II — now selling"}
       </span>
       <h2 class="mt-3">
-        {locale === "uk" ? "Оберіть свій котедж" : "Choose your cottage"}
+        {locale === "uk" ? "Оберіть свій таунхаус" : "Choose your townhouse"}
       </h2>
       <p class="mt-4 text-[var(--ph-ink-soft)]">
         {locale === "uk"
-          ? `${availableCount} котеджів вільні. Площа ~167 м², 3 поверхи, від $1 000/м².`
-          : `${availableCount} cottages available. ~167 m², 3 floors, from $1,000/m².`}
+          ? `${availableCount} таунхаусів вільні. Площа 170 м², 3 поверхи, від $1 000/м².`
+          : `${availableCount} townhouses available. 170 m², 3 floors, from $1,000/m².`}
       </p>
     </div>
 
@@ -55,7 +55,7 @@ function statusLabel(status: string) {
           <div class="relative aspect-[16/10] overflow-hidden">
             <img
               src={lot.image}
-              alt={`Котедж №${lot.number}`}
+              alt={`Таунхаус №${lot.number}`}
               class:list={[
                 "h-full w-full object-cover transition-transform duration-700 ease-[var(--ph-ease)]",
                 lot.status === "available" && "group-hover:scale-105",

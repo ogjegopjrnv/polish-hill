@@ -1,7 +1,7 @@
 export const translations = {
   uk: {
     nav: {
-      lots: "Котеджі",
+      lots: "Таунхауси",
       masterPlan: "Генплан",
       location: "Локація",
       finance: "Фінанси",
@@ -10,7 +10,7 @@ export const translations = {
     },
     cta: {
       bookTour: "Записатись на огляд",
-      chooseCottage: "Обрати котедж",
+      chooseCottage: "Обрати таунхаус",
       getPrice: "Отримати ціни",
       callUs: "Зателефонувати",
       learnMore: "Детальніше",
@@ -37,7 +37,7 @@ export const translations = {
   },
   en: {
     nav: {
-      lots: "Cottages",
+      lots: "Townhouses",
       masterPlan: "Master Plan",
       location: "Location",
       finance: "Finance",
@@ -46,7 +46,7 @@ export const translations = {
     },
     cta: {
       bookTour: "Book a Tour",
-      chooseCottage: "Choose a Cottage",
+      chooseCottage: "Choose a Townhouse",
       getPrice: "Get Prices",
       callUs: "Call Us",
       learnMore: "Learn More",

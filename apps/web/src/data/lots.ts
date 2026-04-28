@@ -16,7 +16,7 @@ export interface Lot {
   status: LotStatus;
   /** Total area in m² (approximate) */
   area: number;
-  /** Land plot area in m² (10 соток = 1000 м²) */
+  /** Land plot area in m² */
   landArea: number;
   /** Number of floors */
   floors: number;
@@ -45,8 +45,8 @@ export interface Lot {
 // Phase I — 12 cottages
 // Phase II — 5 cottages
 // Total: 17 cottages
-// Land plot: 10 соток (1000 м²) each
-// Area: ~167 м² (approximate)
+// Phase II total land: 10 соток, individual plots vary
+// Phase I: ~167 м², Phase II: 170 м²
 export const lots: Lot[] = [
   // === Phase I (12 cottages) ===
   {
@@ -292,16 +292,16 @@ export const lots: Lot[] = [
     number: "13",
     phase: 2,
     status: "available",
-    area: 167,
-    landArea: 1000,
+    area: 170,
+    landArea: 155,
     floors: 3,
     bedrooms: 4,
     bathrooms: 2,
     ceilingHeight: 2.8,
     pricePerSqm: 1000,
-    totalPrice: 167 * 1000,
-    descriptionUk: "Триповерховий котедж з мансардою. Друга черга — старт продажів. Вид на ліс.",
-    descriptionEn: "Three-story cottage with attic. Phase II — sales started. Forest view.",
+    totalPrice: 170 * 1000,
+    descriptionUk: "Триповерховий таунхаус з мансардою. Друга черга — старт продажів. Вид на ліс. Ділянка 1.55 сот.",
+    descriptionEn: "Three-story townhouse with attic. Phase II — sales started. Forest view. Plot 1.55 sotka.",
     image: "/images/client/ph-2.jpg",
     floorPlans: [
       { floor: 1, label: "I поверх", area: 45.9, image: "/images/client/ph-3.jpg" },
@@ -315,16 +315,16 @@ export const lots: Lot[] = [
     number: "14",
     phase: 2,
     status: "available",
-    area: 167,
-    landArea: 1000,
+    area: 170,
+    landArea: 120,
     floors: 3,
     bedrooms: 4,
     bathrooms: 2,
     ceilingHeight: 2.8,
     pricePerSqm: 1000,
-    totalPrice: 167 * 1000,
-    descriptionUk: "Триповерховий котедж. Друга черга. Панорамні вікна.",
-    descriptionEn: "Three-story cottage. Phase II. Panoramic windows.",
+    totalPrice: 170 * 1000,
+    descriptionUk: "Триповерховий таунхаус. Друга черга. Панорамні вікна. Ділянка 1.2 сот.",
+    descriptionEn: "Three-story townhouse. Phase II. Panoramic windows. Plot 1.2 sotka.",
     image: "/images/client/ph-2.jpg",
     floorPlans: [
       { floor: 1, label: "I поверх", area: 45.9 },
@@ -338,16 +338,16 @@ export const lots: Lot[] = [
     number: "15",
     phase: 2,
     status: "available",
-    area: 167,
-    landArea: 1000,
+    area: 170,
+    landArea: 120,
     floors: 3,
     bedrooms: 4,
     bathrooms: 2,
     ceilingHeight: 2.8,
     pricePerSqm: 1000,
-    totalPrice: 167 * 1000,
-    descriptionUk: "Триповерховий котедж. Друга черга.",
-    descriptionEn: "Three-story cottage. Phase II.",
+    totalPrice: 170 * 1000,
+    descriptionUk: "Триповерховий таунхаус. Друга черга. Ділянка 1.2 сот.",
+    descriptionEn: "Three-story townhouse. Phase II. Plot 1.2 sotka.",
     image: "/images/client/ph-2.jpg",
     floorPlans: [],
     features: ["Камінопіч (опція)", "Тераса", "Паркомісце", "Безпроцентна розстрочка 1.5 року"],
@@ -357,16 +357,16 @@ export const lots: Lot[] = [
     number: "16",
     phase: 2,
     status: "available",
-    area: 167,
-    landArea: 1000,
+    area: 170,
+    landArea: 120,
     floors: 3,
     bedrooms: 4,
     bathrooms: 2,
     ceilingHeight: 2.8,
     pricePerSqm: 1000,
-    totalPrice: 167 * 1000,
-    descriptionUk: "Триповерховий котедж. Друга черга.",
-    descriptionEn: "Three-story cottage. Phase II.",
+    totalPrice: 170 * 1000,
+    descriptionUk: "Триповерховий таунхаус. Друга черга. Ділянка 1.2 сот.",
+    descriptionEn: "Three-story townhouse. Phase II. Plot 1.2 sotka.",
     image: "/images/client/ph-2.jpg",
     floorPlans: [],
     features: ["Камінопіч (опція)", "Тераса", "Паркомісце", "Безпроцентна розстрочка 1.5 року"],
@@ -376,16 +376,16 @@ export const lots: Lot[] = [
     number: "17",
     phase: 2,
     status: "available",
-    area: 167,
-    landArea: 1000,
+    area: 170,
+    landArea: 294,
     floors: 3,
     bedrooms: 4,
     bathrooms: 2,
     ceilingHeight: 2.8,
     pricePerSqm: 1000,
-    totalPrice: 167 * 1000,
-    descriptionUk: "Триповерховий кутовий котедж. Друга черга. Вид на озеро.",
-    descriptionEn: "Three-story corner cottage. Phase II. Lake view.",
+    totalPrice: 170 * 1000,
+    descriptionUk: "Триповерховий кутовий таунхаус. Друга черга. Вид на озеро. Ділянка 2.94 сот.",
+    descriptionEn: "Three-story corner townhouse. Phase II. Lake view. Plot 2.94 sotka.",
     image: "/images/client/ph-2.jpg",
     floorPlans: [],
     features: ["Камінопіч (опція)", "Тераса", "Паркомісце x2", "Кутовий", "Вид на озеро", "Безпроцентна розстрочка 1.5 року"],

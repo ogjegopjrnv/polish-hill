@@ -43,7 +43,21 @@ const locale = Astro.currentLocale ?? "uk";
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Analytics -->
+    <script>
+      import { initMetaPixel } from "@lib/analytics/meta-pixel";
+      const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+      if (pixelId) initMetaPixel(pixelId);
+    </script>
+    <script>
+      import { initGtag } from "@lib/analytics/gtag";
+      const gaId = import.meta.env.PUBLIC_GA4_ID;
+      if (gaId) initGtag(gaId);
+    </script>
 
     <script
       is:inline
@@ -67,6 +81,22 @@ const locale = Astro.currentLocale ?? "uk";
     <SiteFooter />
     <ModalForm />
     <CottageModal />
+
+    <!-- UTM capture -->
+    <script>
+      import { captureUtmParams } from "@lib/analytics/utm";
+      captureUtmParams();
+    </script>
+
+    <!-- Phone click tracking -->
+    <script>
+      document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+        link.addEventListener("click", () => {
+          if (typeof window.fbq === "function") window.fbq("track", "Contact");
+          if (typeof window.gtag === "function") window.gtag("event", "contact", { method: "phone" });
+        });
+      });
+    </script>
 
     <!-- Scroll reveal observer -->
     <script>
