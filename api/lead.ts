@@ -1,21 +1,21 @@
-import type { APIRoute } from "astro";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "@vercel/postgres";
 
-export const prerender = false;
-
-export const POST: APIRoute = async ({ request }) => {
-  const headers = { "Content-Type": "application/json" };
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
-    const body = await request.json();
+    const body = req.body;
 
     if (body.website) {
-      return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
+      return res.status(200).json({ ok: true });
     }
 
     const { name, phone, preferred_time } = body;
     if (!name || !phone) {
-      return new Response(JSON.stringify({ error: "Name and phone are required" }), { status: 400, headers });
+      return res.status(400).json({ error: "Name and phone are required" });
     }
 
     const utm_source = body.utm_source || null;
@@ -24,8 +24,8 @@ export const POST: APIRoute = async ({ request }) => {
     const utm_content = body.utm_content || null;
     const utm_term = body.utm_term || null;
     const source_page = body.source_page || "";
-    const userAgent = request.headers.get("user-agent") || "";
-    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
+    const userAgent = (req.headers["user-agent"] as string) || "";
+    const ip = ((req.headers["x-forwarded-for"] as string) || "").split(",")[0]?.trim() || "";
 
     const result = await sql`
       INSERT INTO leads (name, phone, preferred_time, utm_source, utm_medium, utm_campaign, utm_content, utm_term, source_page, user_agent, ip)
@@ -35,16 +35,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     sendTelegramNotification({ name, phone, preferred_time, utm_source, source_page });
 
-    return new Response(JSON.stringify({ ok: true, id: result.rows[0]?.id }), { status: 201, headers });
+    return res.status(201).json({ ok: true, id: result.rows[0]?.id });
   } catch (err) {
     console.error("Lead submission error:", err);
-    return new Response(JSON.stringify({ error: "Server error" }), { status: 500, headers });
+    return res.status(500).json({ error: "Server error" });
   }
-};
+}
 
-async function sendTelegramNotification(lead: Record<string, string | null | undefined>) {
-  const token = import.meta.env.TG_BOT_TOKEN;
-  const chatIds = (import.meta.env.TG_CHAT_IDS || "").split(",").filter(Boolean);
+function sendTelegramNotification(lead: Record<string, string | null | undefined>) {
+  const token = process.env.TG_BOT_TOKEN;
+  const chatIds = (process.env.TG_CHAT_IDS || "").split(",").filter(Boolean);
   if (!token || chatIds.length === 0) return;
 
   const lines = [
