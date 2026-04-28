@@ -16,13 +16,6 @@ const navItems = [
 ];
 ---
 
-<!-- Top bar — phase announcement (hidden on mobile) -->
-<div class="relative z-50 hidden bg-[var(--ph-forest)] text-center md:block">
-  <p class="py-2 text-[0.8125rem] font-medium tracking-wide text-white/90">
-    {i.phaseBadge}
-  </p>
-</div>
-
 <header
   id="site-header"
   class="sticky top-0 z-40 w-full border-b border-transparent transition-all duration-300 ease-[var(--ph-ease)]"
@@ -72,16 +65,17 @@ const navItems = [
         +380 67 440 60 70
       </a>
 
-      <!-- CTA -->
-      <Button
-        as="button"
-        variant="primary"
-        size="sm"
-        class="hidden lg:inline-flex"
-        data-modal-trigger="lead"
-      >
-        {i.cta.bookTour}
-      </Button>
+      <!-- CTA (hidden on mobile, the base Button has inline-flex which overrides hidden, so we wrap) -->
+      <div class="hidden lg:block">
+        <Button
+          as="button"
+          variant="primary"
+          size="sm"
+          data-modal-trigger="lead"
+        >
+          {i.cta.bookTour}
+        </Button>
+      </div>
 
       <!-- Mobile hamburger -->
       <button

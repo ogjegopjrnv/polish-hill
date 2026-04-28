@@ -44,7 +44,7 @@ function formatUSD(n: number) {
 export default function PaymentCalculator({ locale = "uk" }: Props) {
   const i = t[locale];
 
-  const [area, setArea] = useState(167);
+  const [area, setArea] = useState(170);
   const [pricePerSqm, setPricePerSqm] = useState(1000);
   const [downPct, setDownPct] = useState(30);
   const [termMonths, setTermMonths] = useState(18);
@@ -125,7 +125,21 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
       <div className="mt-6 text-center">
         <button
           type="button"
-          data-modal-trigger="lead"
+          onClick={() => {
+            const overlay = document.getElementById("modal-overlay");
+            const card = document.getElementById("modal-card");
+            if (overlay) {
+              overlay.classList.remove("hidden");
+              requestAnimationFrame(() => {
+                overlay.style.opacity = "1";
+                if (card) {
+                  card.style.opacity = "1";
+                  card.style.transform = "translateY(0) scale(1)";
+                }
+              });
+              document.body.style.overflow = "hidden";
+            }
+          }}
           className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--ph-radius-lg)] px-8 text-sm font-semibold text-white transition-all duration-300 active:scale-[0.98]"
           style={{
             background: "var(--ph-forest)",
