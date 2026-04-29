@@ -1,151 +1,24 @@
 declare global {
   interface Window {
-    dataLayer: unknown[];
-    gtag?: (...args: unknown[]) => void;
+    dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
     fbq?: (...args: unknown[]) => void;
     _fbq?: unknown;
   }
 }
 
-// --------------- Init ---------------
-
-export function initGtag(measurementId: string): void {
-  if (typeof window === "undefined") return;
-
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function (...args: unknown[]) {
-    window.dataLayer.push(args);
-  };
-  window.gtag("js", new Date());
-  window.gtag("config", measurementId, {
-    send_page_view: true,
-  });
-
-  const s = document.createElement("script");
-  s.async = true;
-  s.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-  document.head.appendChild(s);
-
-  setupStandardTracking();
-}
-
-export function initMetaPixel(pixelId: string): void {
-  if (typeof window === "undefined" || window.fbq) return;
-
-  const n = function (...args: unknown[]) {
-    n.callMethod ? n.callMethod(...args) : n.queue.push(args);
-  } as unknown as Window["fbq"] & {
-    callMethod?: (...args: unknown[]) => void;
-    queue: unknown[][];
-    push: (...args: unknown[]) => void;
-    loaded: boolean;
-    version: string;
-  };
-
-  n.push = n as unknown as (...args: unknown[]) => void;
-  n.loaded = true;
-  n.version = "2.0";
-  n.queue = [];
-
-  window.fbq = n;
-  if (!window._fbq) window._fbq = n;
-
-  const s = document.createElement("script");
-  s.async = true;
-  s.src = "https://connect.facebook.net/en_US/fbevents.js";
-  document.head.appendChild(s);
-
-  window.fbq("init", pixelId);
-  window.fbq("track", "PageView");
-}
-
-// --------------- Standard Auto-Tracking ---------------
-
-function setupStandardTracking(): void {
-  // Scroll depth tracking (25%, 50%, 75%, 90%)
-  const scrollThresholds = [25, 50, 75, 90];
-  const firedThresholds = new Set<number>();
-
-  window.addEventListener("scroll", () => {
-    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (scrollHeight <= 0) return;
-    const pct = Math.round((window.scrollY / scrollHeight) * 100);
-
-    for (const threshold of scrollThresholds) {
-      if (pct >= threshold && !firedThresholds.has(threshold)) {
-        firedThresholds.add(threshold);
-        ga("scroll", { percent_scrolled: threshold });
-        if (threshold === 90) fb("ViewContent", { content_name: "page_scroll_90" });
-      }
-    }
-  }, { passive: true });
-
-  // Outbound link click tracking
-  document.addEventListener("click", (e) => {
-    const link = (e.target as HTMLElement).closest("a[href]") as HTMLAnchorElement | null;
-    if (!link) return;
-    const href = link.href;
-    if (!href || href.startsWith("tel:") || href.startsWith("mailto:")) return;
-
-    try {
-      const url = new URL(href);
-      if (url.hostname !== window.location.hostname) {
-        ga("click", { link_url: href, link_domain: url.hostname, outbound: true });
-      }
-    } catch { /* ignore invalid URLs */ }
-  });
-
-  // User engagement: track time on page at intervals
-  const engagementMarks = [30, 60, 120, 300];
-  const firedEngagement = new Set<number>();
-  let engagementSeconds = 0;
-  let isVisible = true;
-
-  document.addEventListener("visibilitychange", () => {
-    isVisible = document.visibilityState === "visible";
-  });
-
-  setInterval(() => {
-    if (!isVisible) return;
-    engagementSeconds++;
-    for (const mark of engagementMarks) {
-      if (engagementSeconds >= mark && !firedEngagement.has(mark)) {
-        firedEngagement.add(mark);
-        ga("user_engagement", { engagement_time_msec: mark * 1000 });
-      }
-    }
-  }, 1000);
-
-  // Form start tracking — detect first interaction with any form input
-  document.querySelectorAll("form").forEach((form) => {
-    let started = false;
-    form.addEventListener("focusin", () => {
-      if (started) return;
-      started = true;
-      ga("form_start", { form_id: form.id || "unknown" });
-      fbCustom("FormStart", { form_id: form.id || "unknown" });
-    }, { once: false });
-  });
-}
-
 // --------------- Helpers ---------------
 
 function ga(event: string, params?: Record<string, unknown>): void {
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", event, params);
-  }
+  window.gtag?.("event", event, params);
 }
 
 function fb(event: string, params?: Record<string, unknown>): void {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", event, params);
-  }
+  window.fbq?.("track", event, params);
 }
 
 function fbCustom(event: string, params?: Record<string, unknown>): void {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("trackCustom", event, params);
-  }
+  window.fbq?.("trackCustom", event, params);
 }
 
 // --------------- Standard Events ---------------
@@ -201,10 +74,7 @@ export function trackCalculatorInteraction(params: {
     total_value: params.total,
     monthly_payment: params.monthly,
   });
-  fbCustom("CalculatorInteraction", {
-    value: params.total,
-    currency: "USD",
-  });
+  fbCustom("CalculatorInteraction", { value: params.total, currency: "USD" });
 }
 
 export function trackCTAClick(ctaName: string, location: string): void {
@@ -219,4 +89,93 @@ export function trackSectionView(sectionId: string): void {
 export function trackScheduleVisit(): void {
   ga("schedule_visit");
   fb("Schedule");
+}
+
+// --------------- Auto-tracking (called once from BaseLayout) ---------------
+
+export function setupAutoTracking(): void {
+  // Scroll depth (25%, 50%, 75%, 90%)
+  const firedScroll = new Set<number>();
+  window.addEventListener("scroll", () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return;
+    const pct = Math.round((window.scrollY / max) * 100);
+    for (const t of [25, 50, 75, 90]) {
+      if (pct >= t && !firedScroll.has(t)) {
+        firedScroll.add(t);
+        ga("scroll", { percent_scrolled: t });
+      }
+    }
+  }, { passive: true });
+
+  // Outbound clicks
+  document.addEventListener("click", (e) => {
+    const a = (e.target as HTMLElement).closest("a[href]") as HTMLAnchorElement | null;
+    if (!a?.href || a.href.startsWith("tel:") || a.href.startsWith("mailto:")) return;
+    try {
+      const u = new URL(a.href);
+      if (u.hostname !== location.hostname) {
+        ga("click", { link_url: a.href, link_domain: u.hostname, outbound: true });
+      }
+    } catch { /* skip */ }
+  });
+
+  // Time on page (30s, 60s, 120s, 300s)
+  const firedTime = new Set<number>();
+  let seconds = 0;
+  let visible = true;
+  document.addEventListener("visibilitychange", () => { visible = !document.hidden; });
+  setInterval(() => {
+    if (!visible) return;
+    seconds++;
+    for (const m of [30, 60, 120, 300]) {
+      if (seconds >= m && !firedTime.has(m)) {
+        firedTime.add(m);
+        ga("user_engagement", { engagement_time_msec: m * 1000 });
+      }
+    }
+  }, 1000);
+
+  // Form start — first focus on any form field
+  document.querySelectorAll("form").forEach((form) => {
+    let started = false;
+    form.addEventListener("focusin", () => {
+      if (started) return;
+      started = true;
+      ga("form_start", { form_id: form.id || "unknown" });
+      fbCustom("FormStart", { form_id: form.id || "unknown" });
+    });
+  });
+
+  // Phone clicks
+  document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+    link.addEventListener("click", () => trackContact("phone"));
+  });
+
+  // CTA clicks (all [data-modal-trigger] buttons)
+  document.querySelectorAll("[data-modal-trigger]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const section = btn.closest("section")?.id || btn.closest("header")?.id || "unknown";
+      trackCTAClick("book_tour", section);
+      trackScheduleVisit();
+    });
+  });
+
+  // Section visibility
+  const trackedSections = new Set<string>();
+  const sections = document.querySelectorAll("section[id]");
+  if (sections.length && "IntersectionObserver" in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          if (!trackedSections.has(id)) {
+            trackedSections.add(id);
+            trackSectionView(id);
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach((s) => obs.observe(s));
+  }
 }

@@ -19,6 +19,9 @@ const {
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const locale = Astro.currentLocale ?? "uk";
+
+const gaId = import.meta.env.PUBLIC_GA4_ID || "";
+const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID || "";
 ---
 
 <!doctype html>
@@ -47,14 +50,32 @@ const locale = Astro.currentLocale ?? "uk";
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <!-- Analytics -->
-    <script>
-      import { initMetaPixel, initGtag } from "@lib/analytics/analytics";
-      const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
-      if (pixelId) initMetaPixel(pixelId);
-      const gaId = import.meta.env.PUBLIC_GA4_ID;
-      if (gaId) initGtag(gaId);
-    </script>
+    <!-- GA4 — standard inline snippet (must be in <head>, not a module) -->
+    {gaId && (
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId, { send_page_view: true });
+      </script>
+    )}
+    {gaId && (
+      <script is:inline src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async />
+    )}
+
+    <!-- Meta Pixel — standard inline snippet -->
+    {pixelId && (
+      <script is:inline define:vars={{ pixelId }}>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+        (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', pixelId);
+        fbq('track', 'PageView');
+      </script>
+    )}
 
     <script
       is:inline
@@ -79,46 +100,12 @@ const locale = Astro.currentLocale ?? "uk";
     <ModalForm />
     <CottageModal />
 
-    <!-- UTM capture -->
+    <!-- UTM capture + all event tracking -->
     <script>
       import { captureUtmParams } from "@lib/analytics/utm";
+      import { setupAutoTracking } from "@lib/analytics/analytics";
       captureUtmParams();
-    </script>
-
-    <!-- Phone click tracking -->
-    <script>
-      import { trackContact, trackCTAClick, trackScheduleVisit } from "@lib/analytics/analytics";
-      document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
-        link.addEventListener("click", () => trackContact("phone"));
-      });
-      document.querySelectorAll("[data-modal-trigger]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const section = btn.closest("section")?.id || btn.closest("header")?.id || "unknown";
-          trackCTAClick("book_tour", section);
-          trackScheduleVisit();
-        });
-      });
-    </script>
-
-    <!-- Section visibility tracking -->
-    <script>
-      import { trackSectionView } from "@lib/analytics/analytics";
-      const trackedSections = new Set<string>();
-      const sections = document.querySelectorAll("section[id]");
-      if (sections.length && "IntersectionObserver" in window) {
-        const sectionObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const id = entry.target.id;
-              if (!trackedSections.has(id)) {
-                trackedSections.add(id);
-                trackSectionView(id);
-              }
-            }
-          });
-        }, { threshold: 0.3 });
-        sections.forEach((s) => sectionObserver.observe(s));
-      }
+      setupAutoTracking();
     </script>
 
     <!-- Scroll reveal observer -->
