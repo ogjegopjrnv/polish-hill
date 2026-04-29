@@ -77,9 +77,9 @@ export function trackCalculatorInteraction(params: {
   fbCustom("CalculatorInteraction", { value: params.total, currency: "USD" });
 }
 
-export function trackCTAClick(ctaName: string, location: string): void {
-  ga("cta_click", { cta_name: ctaName, location });
-  fbCustom("CTAClick", { cta_name: ctaName, location });
+export function trackCTAClick(ctaName: string, ctaLocation: string): void {
+  ga("cta_click", { cta_name: ctaName, cta_location: ctaLocation });
+  fbCustom("CTAClick", { cta_name: ctaName, cta_location: ctaLocation });
 }
 
 export function trackSectionView(sectionId: string): void {
