@@ -1,3 +1,5 @@
+import Clarity from "@microsoft/clarity";
+
 declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
@@ -5,6 +7,12 @@ declare global {
     fbq?: (...args: unknown[]) => void;
     _fbq?: unknown;
   }
+}
+
+// --------------- Clarity Init ---------------
+
+export function initClarity(projectId: string): void {
+  Clarity.init(projectId);
 }
 
 // --------------- Helpers ---------------
@@ -21,16 +29,23 @@ function fbCustom(event: string, params?: Record<string, unknown>): void {
   window.fbq?.("trackCustom", event, params);
 }
 
+function cl(event: string): void {
+  try { Clarity.event(event); } catch { /* not initialized */ }
+}
+
 // --------------- Standard Events ---------------
 
 export function trackLead(source?: string): void {
   ga("generate_lead", { currency: "USD", event_label: source });
   fb("Lead", { content_name: source });
+  cl("lead");
+  try { Clarity.upgrade("lead"); } catch { /* not initialized */ }
 }
 
 export function trackContact(method: string): void {
   ga("contact", { method });
   fb("Contact");
+  cl("contact");
 }
 
 export function trackViewContent(lot: { id: string; number: number; price: number; area: number }): void {
@@ -46,6 +61,7 @@ export function trackViewContent(lot: { id: string; number: number; price: numbe
     currency: "USD",
     value: lot.price,
   });
+  cl("view_townhouse");
 }
 
 // --------------- Custom Events ---------------
@@ -58,6 +74,7 @@ export function trackSelectItem(lot: { id: string; number: number; price: number
     content_ids: [lot.id],
     content_name: `Таунхаус №${lot.number}`,
   });
+  cl("select_townhouse");
 }
 
 export function trackCalculatorInteraction(params: {
@@ -75,11 +92,13 @@ export function trackCalculatorInteraction(params: {
     monthly_payment: params.monthly,
   });
   fbCustom("CalculatorInteraction", { value: params.total, currency: "USD" });
+  cl("calculator_use");
 }
 
 export function trackCTAClick(ctaName: string, ctaLocation: string): void {
   ga("cta_click", { cta_name: ctaName, cta_location: ctaLocation });
   fbCustom("CTAClick", { cta_name: ctaName, cta_location: ctaLocation });
+  cl("cta_click");
 }
 
 export function trackSectionView(sectionId: string): void {
@@ -89,6 +108,7 @@ export function trackSectionView(sectionId: string): void {
 export function trackScheduleVisit(): void {
   ga("schedule_visit");
   fb("Schedule");
+  cl("schedule_visit");
 }
 
 // --------------- Auto-tracking (called once from BaseLayout) ---------------
@@ -144,6 +164,7 @@ export function setupAutoTracking(): void {
       started = true;
       ga("form_start", { form_id: form.id || "unknown" });
       fbCustom("FormStart", { form_id: form.id || "unknown" });
+      cl("form_start");
     });
   });
 

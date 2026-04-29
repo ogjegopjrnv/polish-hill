@@ -35,6 +35,9 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.1.2
         version: 5.2.8
+      '@microsoft/clarity':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@vercel/postgres':
         specifier: ^0.10.0
         version: 0.10.0
@@ -937,6 +940,9 @@ packages:
     resolution: {integrity: sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@microsoft/clarity@1.0.2':
+    resolution: {integrity: sha512-9EZYROFpJxEGmQpHvUFqvD3ZJ7QQSqnibYSWmS+1xusoZfG1QQ1/Al9yVBBc11DWMbJrs1pe1hLT273it/skJg==}
 
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
@@ -3775,6 +3781,8 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@microsoft/clarity@1.0.2': {}
 
   '@neondatabase/serverless@0.9.5':
     dependencies:
