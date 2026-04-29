@@ -17,12 +17,16 @@ export function initGtag(measurementId: string): void {
     window.dataLayer.push(args);
   };
   window.gtag("js", new Date());
-  window.gtag("config", measurementId);
+  window.gtag("config", measurementId, {
+    send_page_view: true,
+  });
 
   const s = document.createElement("script");
   s.async = true;
   s.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
   document.head.appendChild(s);
+
+  setupStandardTracking();
 }
 
 export function initMetaPixel(pixelId: string): void {
@@ -53,6 +57,75 @@ export function initMetaPixel(pixelId: string): void {
 
   window.fbq("init", pixelId);
   window.fbq("track", "PageView");
+}
+
+// --------------- Standard Auto-Tracking ---------------
+
+function setupStandardTracking(): void {
+  // Scroll depth tracking (25%, 50%, 75%, 90%)
+  const scrollThresholds = [25, 50, 75, 90];
+  const firedThresholds = new Set<number>();
+
+  window.addEventListener("scroll", () => {
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollHeight <= 0) return;
+    const pct = Math.round((window.scrollY / scrollHeight) * 100);
+
+    for (const threshold of scrollThresholds) {
+      if (pct >= threshold && !firedThresholds.has(threshold)) {
+        firedThresholds.add(threshold);
+        ga("scroll", { percent_scrolled: threshold });
+        if (threshold === 90) fb("ViewContent", { content_name: "page_scroll_90" });
+      }
+    }
+  }, { passive: true });
+
+  // Outbound link click tracking
+  document.addEventListener("click", (e) => {
+    const link = (e.target as HTMLElement).closest("a[href]") as HTMLAnchorElement | null;
+    if (!link) return;
+    const href = link.href;
+    if (!href || href.startsWith("tel:") || href.startsWith("mailto:")) return;
+
+    try {
+      const url = new URL(href);
+      if (url.hostname !== window.location.hostname) {
+        ga("click", { link_url: href, link_domain: url.hostname, outbound: true });
+      }
+    } catch { /* ignore invalid URLs */ }
+  });
+
+  // User engagement: track time on page at intervals
+  const engagementMarks = [30, 60, 120, 300];
+  const firedEngagement = new Set<number>();
+  let engagementSeconds = 0;
+  let isVisible = true;
+
+  document.addEventListener("visibilitychange", () => {
+    isVisible = document.visibilityState === "visible";
+  });
+
+  setInterval(() => {
+    if (!isVisible) return;
+    engagementSeconds++;
+    for (const mark of engagementMarks) {
+      if (engagementSeconds >= mark && !firedEngagement.has(mark)) {
+        firedEngagement.add(mark);
+        ga("user_engagement", { engagement_time_msec: mark * 1000 });
+      }
+    }
+  }, 1000);
+
+  // Form start tracking — detect first interaction with any form input
+  document.querySelectorAll("form").forEach((form) => {
+    let started = false;
+    form.addEventListener("focusin", () => {
+      if (started) return;
+      started = true;
+      ga("form_start", { form_id: form.id || "unknown" });
+      fbCustom("FormStart", { form_id: form.id || "unknown" });
+    }, { once: false });
+  });
 }
 
 // --------------- Helpers ---------------

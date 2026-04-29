@@ -54,7 +54,7 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
   const remaining = total - downAmount;
   const monthly = termMonths > 0 ? Math.round(remaining / termMonths) : 0;
 
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const interacted = useRef(false);
   useEffect(() => {
     if (!interacted.current) { interacted.current = true; return; }
