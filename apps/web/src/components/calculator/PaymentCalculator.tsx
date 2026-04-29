@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Props {
   locale?: "uk" | "en";
@@ -53,6 +53,19 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
   const downAmount = Math.round(total * (downPct / 100));
   const remaining = total - downAmount;
   const monthly = termMonths > 0 ? Math.round(remaining / termMonths) : 0;
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const interacted = useRef(false);
+  useEffect(() => {
+    if (!interacted.current) { interacted.current = true; return; }
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      import("@lib/analytics/analytics").then(({ trackCalculatorInteraction }) => {
+        trackCalculatorInteraction({ homes, downPayment: downPct, term: termMonths, total, monthly });
+      });
+    }, 1500);
+    return () => clearTimeout(debounceRef.current);
+  }, [homes, downPct, termMonths]);
 
   return (
     <div className="rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-6 shadow-[var(--ph-shadow-md)] sm:p-8 md:p-10">
@@ -117,6 +130,9 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
         <button
           type="button"
           onClick={() => {
+            import("@lib/analytics/analytics").then(({ trackCTAClick }) => {
+              trackCTAClick("get_offer", "calculator");
+            });
             const overlay = document.getElementById("modal-overlay");
             const card = document.getElementById("modal-card");
             if (overlay) {

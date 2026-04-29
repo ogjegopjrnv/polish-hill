@@ -106,6 +106,8 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
 </script>
 
 <script>
+  import { trackSelectItem, trackViewContent, trackCTAClick, trackScheduleVisit } from "@lib/analytics/analytics";
+
   const overlay = document.getElementById("cottage-overlay");
   const card = document.getElementById("cottage-card");
   const closeBtn = document.getElementById("cottage-close");
@@ -115,6 +117,9 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
     const locale = (window as any).__PH_LOCALE || "uk";
     const lot = lots.find((l: any) => l.id === lotId);
     if (!lot) return;
+
+    trackSelectItem({ id: lot.id, number: lot.number, price: lot.totalPrice });
+    trackViewContent({ id: lot.id, number: lot.number, price: lot.totalPrice, area: lot.area });
 
     // Fill content
     const img = document.querySelector("#cottage-modal-image img") as HTMLImageElement;
@@ -183,9 +188,11 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
     if (lotId) openCottageModal(lotId);
   });
 
-  // Book button inside cottage modal → close cottage modal, open lead modal
+  // Book button inside cottage modal → track + close cottage modal, open lead modal
   document.querySelectorAll(".cottage-book-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
+      trackCTAClick("reserve", "cottage_modal");
+      trackScheduleVisit();
       closeCottageModal();
     });
   });

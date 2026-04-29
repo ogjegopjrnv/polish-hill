@@ -211,8 +211,8 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
       });
 
       if (res.ok) {
-        if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
-        if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { currency: 'USD' });
+        const { trackLead } = await import('@lib/analytics/analytics');
+        trackLead('modal_form');
 
         document.getElementById('modal-intro')!.style.display = 'none';
         form.style.display = 'none';

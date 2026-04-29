@@ -49,12 +49,9 @@ const locale = Astro.currentLocale ?? "uk";
 
     <!-- Analytics -->
     <script>
-      import { initMetaPixel } from "@lib/analytics/meta-pixel";
+      import { initMetaPixel, initGtag } from "@lib/analytics/analytics";
       const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
       if (pixelId) initMetaPixel(pixelId);
-    </script>
-    <script>
-      import { initGtag } from "@lib/analytics/gtag";
       const gaId = import.meta.env.PUBLIC_GA4_ID;
       if (gaId) initGtag(gaId);
     </script>
@@ -90,12 +87,38 @@ const locale = Astro.currentLocale ?? "uk";
 
     <!-- Phone click tracking -->
     <script>
+      import { trackContact, trackCTAClick, trackScheduleVisit } from "@lib/analytics/analytics";
       document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
-        link.addEventListener("click", () => {
-          if (typeof window.fbq === "function") window.fbq("track", "Contact");
-          if (typeof window.gtag === "function") window.gtag("event", "contact", { method: "phone" });
+        link.addEventListener("click", () => trackContact("phone"));
+      });
+      document.querySelectorAll("[data-modal-trigger]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const section = btn.closest("section")?.id || btn.closest("header")?.id || "unknown";
+          trackCTAClick("book_tour", section);
+          trackScheduleVisit();
         });
       });
+    </script>
+
+    <!-- Section visibility tracking -->
+    <script>
+      import { trackSectionView } from "@lib/analytics/analytics";
+      const trackedSections = new Set<string>();
+      const sections = document.querySelectorAll("section[id]");
+      if (sections.length && "IntersectionObserver" in window) {
+        const sectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              if (!trackedSections.has(id)) {
+                trackedSections.add(id);
+                trackSectionView(id);
+              }
+            }
+          });
+        }, { threshold: 0.3 });
+        sections.forEach((s) => sectionObserver.observe(s));
+      }
     </script>
 
     <!-- Scroll reveal observer -->

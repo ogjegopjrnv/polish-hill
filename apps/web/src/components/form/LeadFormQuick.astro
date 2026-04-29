@@ -91,8 +91,8 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
       });
 
       if (res.ok) {
-        if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
-        if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { currency: 'USD' });
+        const { trackLead } = await import('@lib/analytics/analytics');
+        trackLead('quick_form');
 
         form.innerHTML = '<p class="text-center text-xl font-semibold text-white">Дякуємо! Менеджер зателефонує вам найближчим часом.</p>';
       } else {
