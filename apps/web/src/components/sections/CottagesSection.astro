@@ -108,6 +108,29 @@ function statusLabel(status: string) {
       ))}
     </div>
 
+    {/* Floor plan */}
+    <div class="reveal mt-14 rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 md:p-10">
+      <div class="mx-auto max-w-2xl text-center">
+        <h3 class="text-lg">
+          {locale === "uk" ? "Планування таунхаусу" : "Townhouse floor plan"}
+        </h3>
+        <p class="mt-2 text-[0.8125rem] text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "170 м² на 3 поверхи — продумане планування для комфортного життя."
+            : "170 m² across 3 floors — thoughtful layout for comfortable living."}
+        </p>
+      </div>
+      <div class="mt-8">
+        <img
+          src="/images/client/polish-hill-plan.svg"
+          alt={locale === "uk" ? "Планування таунхаусу Polish Hill — 3 поверхи" : "Polish Hill townhouse floor plan — 3 floors"}
+          class="mx-auto w-full max-w-5xl"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
     {/* Phase I summary — compact */}
     <div class="reveal mt-12 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 text-center">
       <p class="text-[0.875rem] text-[var(--ph-ink-soft)]">
