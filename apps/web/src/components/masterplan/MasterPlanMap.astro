@@ -87,7 +87,7 @@ function lotFill(status: string) {
           <span class="mt-1 block text-[0.75rem] leading-tight text-[var(--ph-ink-muted)]">
             {lot.area} м²
           </span>
-          <span class="mt-1 block text-[0.6875rem] leading-tight text-[var(--ph-forest-light)]">
+          <span class="mt-1 block text-[0.6875rem] font-semibold leading-tight text-[#2d8a4e]">
             {locale === "uk" ? "Ділянка:" : "Plot:"} {(lot.landArea / 100).toFixed(2)} сот
           </span>
           {lot.status !== "sold" && (
@@ -232,7 +232,7 @@ function lotFill(status: string) {
           <text x={x + COL_W / 2} y={y + 48} text-anchor="middle" fill="var(--ph-ink-muted)" font-size="9" font-family="var(--font-body)">
             {lot.area} м²
           </text>
-          <text x={x + COL_W / 2} y={y + 62} text-anchor="middle" fill="var(--ph-forest-light)" font-size="8" font-family="var(--font-body)">
+          <text x={x + COL_W / 2} y={y + 62} text-anchor="middle" fill="#2d8a4e" font-size="8" font-weight="600" font-family="var(--font-body)">
             {locale === "uk" ? "Ділянка:" : "Plot:"} {(lot.landArea / 100).toFixed(2)} сот
           </text>
           {lot.status !== "sold" && (

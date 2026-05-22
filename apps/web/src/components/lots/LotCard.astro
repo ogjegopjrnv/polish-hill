@@ -76,7 +76,7 @@ const Tag = isClickable ? "a" : "div";
           {locale === "uk" ? `Таунхаус №${lot.number}` : `Townhouse #${lot.number}`}
         </h3>
         <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-muted)]">
-          {lot.area} м² &middot; {lot.floors} {locale === "uk" ? "пов." : "fl."} &middot; {locale === "uk" ? "Ділянка" : "Plot"} {(lot.landArea / 100).toFixed(2)} {locale === "uk" ? "сот" : "sot"}
+          {lot.area} м² &middot; {lot.floors} {locale === "uk" ? "пов." : "fl."} &middot; <span class="font-semibold text-[#2d8a4e]">{locale === "uk" ? "Ділянка" : "Plot"} {(lot.landArea / 100).toFixed(2)} {locale === "uk" ? "сот" : "sot"}</span>
         </p>
       </div>
       {lot.status !== "sold" && (
