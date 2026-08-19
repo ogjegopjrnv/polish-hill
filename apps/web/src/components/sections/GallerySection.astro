@@ -1,0 +1,128 @@
+---
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const photos = [
+  { src: "/images/client/duplex-1.jpg", alt: locale === "uk" ? "Два дуплекси — загальний вигляд" : "Two duplexes — general view" },
+  { src: "/images/client/duplex-4.jpg", alt: locale === "uk" ? "Фасад дуплексу зблизька" : "Duplex facade close-up" },
+  { src: "/images/client/duplex-2.jpg", alt: locale === "uk" ? "Дуплекси — перспектива" : "Duplexes — perspective" },
+  { src: "/images/client/duplex-3.jpg", alt: locale === "uk" ? "Дуплекси — вид зверху" : "Duplexes — aerial view" },
+  { src: "/images/client/duplex-5.jpg", alt: locale === "uk" ? "Два дуплекси — фронтальний вид" : "Two duplexes — front view" },
+];
+---
+
+<section class="section bg-[var(--ph-bg)]">
+  <div class="container-ph">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "Галерея" : "Gallery"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Як виглядають наші дуплекси" : "What our duplexes look like"}
+      </h2>
+    </div>
+
+    <div class="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 [grid-auto-rows:220px] sm:[grid-auto-rows:280px] lg:[grid-auto-rows:320px]">
+      {photos.map(({ src, alt }, i) => (
+        <div
+          class:list={[
+            "reveal group overflow-hidden rounded-[var(--ph-radius-xl)] shadow-[var(--ph-shadow-sm)]",
+            i === 0 && "col-span-2 lg:col-span-2",
+          ]}
+          style={`transition-delay: ${i * 60}ms;`}
+        >
+          <img
+            src={src}
+            alt={alt}
+            class="h-full w-full cursor-zoom-in object-cover transition-transform duration-500 ease-[var(--ph-ease)] group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            data-gallery-zoom
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* Gallery lightbox */}
+<div
+  id="gallery-lightbox"
+  class="fixed inset-0 z-[200] hidden bg-black/90 backdrop-blur-sm"
+  aria-hidden="true"
+>
+  <button
+    id="gallery-lb-close"
+    class="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+    aria-label="Закрити"
+  >
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <button
+    id="gallery-lb-prev"
+    class="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+    aria-label="Попереднє фото"
+  >
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  <button
+    id="gallery-lb-next"
+    class="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+    aria-label="Наступне фото"
+  >
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+  <div class="flex h-full w-full items-center justify-center p-12">
+    <img id="gallery-lb-img" src="" alt="" class="max-h-full max-w-full rounded-[var(--ph-radius-xl)] object-contain" />
+  </div>
+  <p id="gallery-lb-caption" class="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-4 py-1.5 text-[0.8125rem] text-white/80 backdrop-blur-sm"></p>
+</div>
+
+<script>
+  {
+    const lb = document.getElementById('gallery-lightbox')!;
+    const img = document.getElementById('gallery-lb-img') as HTMLImageElement;
+    const caption = document.getElementById('gallery-lb-caption')!;
+    const items = [...document.querySelectorAll<HTMLImageElement>('[data-gallery-zoom]')];
+    let idx = 0;
+
+    function show(i: number) {
+      idx = (i + items.length) % items.length;
+      img.src = items[idx].src;
+      img.alt = items[idx].alt;
+      caption.textContent = items[idx].alt;
+    }
+
+    function open(i: number) {
+      show(i);
+      lb.classList.remove('hidden');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      lb.classList.add('hidden');
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    items.forEach((el, i) => el.addEventListener('click', () => open(i)));
+    document.getElementById('gallery-lb-close')!.addEventListener('click', close);
+    document.getElementById('gallery-lb-prev')!.addEventListener('click', () => show(idx - 1));
+    document.getElementById('gallery-lb-next')!.addEventListener('click', () => show(idx + 1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+      if (lb.classList.contains('hidden')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(idx - 1);
+      if (e.key === 'ArrowRight') show(idx + 1);
+    });
+  }
+</script>

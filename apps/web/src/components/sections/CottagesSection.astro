@@ -63,11 +63,11 @@ const zones = [
       <div class="duplex-group-label" style="left: 65%;">Дуплекс B</div>
     </div>
 
-    <!-- Mobile: card list -->
-    <div class="mt-10 grid grid-cols-2 gap-3 md:hidden">
+    <!-- Mobile: horizontal scroll -->
+    <div class="mt-10 flex gap-3 overflow-x-auto pb-2 md:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {lots.map((lot) => (
         <div
-          class="reveal cursor-pointer overflow-hidden rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] transition-all duration-200 active:scale-[0.98]"
+          class="reveal w-[200px] shrink-0 cursor-pointer overflow-hidden rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] transition-all duration-200 active:scale-[0.98]"
           data-cottage-trigger={lot.id}
           role="button"
           tabindex="0"
