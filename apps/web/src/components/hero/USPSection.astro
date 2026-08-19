@@ -1,5 +1,5 @@
 ---
-import { TreePine, BadgeDollarSign, ShieldCheck, Star } from "lucide-astro";
+import { TreePine, BadgeDollarSign, ShieldCheck, Medal } from "lucide-astro";
 import type { Locale } from "@lib/i18n/translations";
 
 const locale = (Astro.currentLocale ?? "uk") as Locale;
@@ -7,31 +7,31 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
 const items = [
   {
     icon: "treepine",
-    title: locale === "uk" ? "Ліс та озеро" : "Forest & lake",
+    title: locale === "uk" ? "Парк Наталка та Дніпро" : "Natalka Park & Dnipro",
     text: locale === "uk"
-      ? "Унікальна локація на Оболоні — вихід до лісу та озера за 2 хвилини пішки"
-      : "Unique Obolon location — forest and lake 2 minutes walk away",
+      ? "Урочище Наталка — одна з найзеленіших зон Києва. Парк, набережна Дніпра та природа в пішій доступності"
+      : "Natalka tract — one of Kyiv's greenest areas. Park, Dnipro embankment and nature within walking distance",
   },
   {
     icon: "dollar",
     title: locale === "uk" ? "Від $1 000/м²" : "From $1,000/m²",
     text: locale === "uk"
-      ? "Безпроцентна розстрочка від забудовника на 1.5 року без участі банків"
-      : "Interest-free installment from developer for 1.5 years, no banks involved",
+      ? "Безвідсоткове розтермінування до 18 місяців від забудовника. Без участі банків"
+      : "Interest-free installment for up to 18 months from developer. No banks involved",
   },
   {
     icon: "shield",
     title: locale === "uk" ? "Юридична чистота" : "Legal clarity",
     text: locale === "uk"
-      ? "Всі дозволи та документи в відкритому доступі. Повний юридичний супровід"
-      : "All permits and documents publicly available. Full legal support",
+      ? "КДТ «Чорнобилець» з 1996 року. Земельні ділянки надані рішеннями органів влади. Повний супровід"
+      : "KDT Chornobylec since 1996. Land plots granted by government decision. Full legal support",
   },
   {
-    icon: "star",
-    title: locale === "uk" ? "Програма для ЗСУ" : "Military program",
+    icon: "medal",
+    title: locale === "uk" ? "Знижки для ЗСУ" : "Military discounts",
     text: locale === "uk"
-      ? "Спеціальна знижка та гнучкі умови оплати для військовослужбовців"
-      : "Special discount and flexible payment for military personnel",
+      ? "5% для військовослужбовців. 5% для сімей загиблих Захисників і Захисниць України"
+      : "5% for military personnel. 5% for families of fallen Defenders of Ukraine",
   },
 ];
 ---
@@ -43,7 +43,7 @@ const items = [
         {locale === "uk" ? "Переваги" : "Advantages"}
       </span>
       <h2 class="mt-3">
-        {locale === "uk" ? "Чому обирають Polish Hill" : "Why choose Polish Hill"}
+        {locale === "uk" ? "Чому обирають наші дуплекси" : "Why choose our duplexes"}
       </h2>
     </div>
 
@@ -57,7 +57,7 @@ const items = [
             {icon === "treepine" && <TreePine size={26} strokeWidth={1.5} />}
             {icon === "dollar" && <BadgeDollarSign size={26} strokeWidth={1.5} />}
             {icon === "shield" && <ShieldCheck size={26} strokeWidth={1.5} />}
-            {icon === "star" && <Star size={26} strokeWidth={1.5} />}
+            {icon === "medal" && <Medal size={26} strokeWidth={1.5} />}
           </div>
 
           <h3 class="text-[1.125rem]">{title}</h3>

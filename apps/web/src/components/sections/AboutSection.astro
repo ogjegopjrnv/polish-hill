@@ -11,8 +11,8 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
       <div class="reveal">
         <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-lg)]">
           <img
-            src="/images/client/2nd1x1.jpg"
-            alt={locale === "uk" ? "Polish Hill II — таунхауси другої черги" : "Polish Hill Phase II townhouses"}
+            src="/images/client/duplex-3.jpg"
+            alt={locale === "uk" ? "Дуплекси — вид зверху" : "Duplexes — aerial view"}
             class="aspect-square w-full object-cover"
             loading="lazy"
             decoding="async"
@@ -26,25 +26,25 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
           {locale === "uk" ? "Про проєкт" : "About"}
         </span>
         <h2 class="mt-3">
-          {locale === "uk" ? "Polish Hill II — ваш таунхаус серед природи" : "Polish Hill II — your townhouse in nature"}
+          {locale === "uk" ? "Сучасні дуплекси в серці Оболоні" : "Modern duplexes in the heart of Obolon"}
         </h2>
         <p class="mt-4 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "ЖК «Польський куточок» — котеджне містечко комфорт-класу в Оболонському районі Києва. Проєкт розташований на території КДТ «Чорнобилець», урочище «Наталка», 9 лінія."
-            : "Polish Hill is a comfort-class cottage community in Obolon district, Kyiv. Located in KDT Chornobylec, Natalka tract, line 9."}
+            ? "На чотирьох земельних ділянках у КДТ «Чорнобилець» (урочище Наталка) передбачено будівництво двох сучасних дуплексів. Кожна секція — це повністю автономний будинок з окремим входом, власною ділянкою та вбудованим паркомісцем."
+            : "Four land plots in KDT Chornobylec (Natalka tract) host two modern duplexes. Each section is a fully autonomous house with separate entrance, private plot and built-in parking."}
         </p>
         <p class="mt-3 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "I черга (12 котеджів) — повністю завершена і заселена. II черга (5 таунхаусів) — активний продаж. Кожен таунхаус — 170 м² на 3 поверхи з індивідуальною ділянкою від 1.2 до 2.94 соток."
-            : "Phase I (12 cottages) — fully completed. Phase II (5 townhouses) — active sales. Each townhouse is 170 m² on 3 floors with individual plot from 1.2 to 2.94 sotka."}
+            ? "КДТ «Чорнобилець» створено у 1996 році. Територія охороняється, заїзд через шлагбаум. Стан — після будівельників, за бажанням доступний ремонт під ключ від забудовника."
+            : "KDT Chornobylec established in 1996. Gated territory with barrier. Shell & core condition, turnkey renovation available from developer."}
         </p>
 
         <div class="mt-8 grid grid-cols-2 gap-4">
           {[
-            { value: "2019", label: locale === "uk" ? "Рік заснування" : "Founded" },
-            { value: "17", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
-            { value: "170 м²", label: locale === "uk" ? "Площа таунхауса" : "Townhouse area" },
-            { value: "8 га", label: locale === "uk" ? "Територія" : "Territory" },
+            { value: "2", label: locale === "uk" ? "Дуплекси" : "Duplexes" },
+            { value: "195–200 м²", label: locale === "uk" ? "Площа секції" : "Section area" },
+            { value: "2.80 м", label: locale === "uk" ? "Стелі" : "Ceiling height" },
+            { value: "D500", label: locale === "uk" ? "Газоблок" : "Gas block" },
           ].map(({ value, label }) => (
             <div class="rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-4 text-center">
               <span class="tabular-nums text-[1.5rem] font-bold text-[var(--ph-forest)]">{value}</span>
@@ -53,15 +53,14 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
           ))}
         </div>
 
-        {/* Documents */}
         <div class="mt-8">
           <h4 class="text-[0.8125rem] font-semibold text-[var(--ph-ink)]">
-            {locale === "uk" ? "Документи" : "Documents"}
+            {locale === "uk" ? "Що таке дуплекс?" : "What is a duplex?"}
           </h4>
           <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-soft)]">
             {locale === "uk"
-              ? "Всі дозвільні документи, кадастровий план та юридичні висновки доступні за запитом."
-              : "All permits, cadastral plan and legal opinions available upon request."}
+              ? "Два повністю автономних будинки, об'єднаних лише однією спільною стіною. Окрема ділянка, окремий вхід, власні комунікації, повна приватність."
+              : "Two fully autonomous houses sharing only one common wall. Separate plot, entrance, utilities, complete privacy."}
           </p>
         </div>
       </div>

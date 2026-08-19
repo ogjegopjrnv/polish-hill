@@ -18,13 +18,13 @@ const navItems = [
 
 <header
   id="site-header"
-  class="sticky top-0 z-40 w-full border-b border-transparent transition-all duration-300 ease-[var(--ph-ease)]"
+  class="header-transparent fixed top-0 z-40 w-full border-b border-transparent transition-all duration-300 ease-[var(--ph-ease)]"
 >
   <nav class="container-ph flex h-16 items-center justify-between lg:h-[4.5rem]">
     <!-- Logo -->
     <a href="/" class="relative z-10 flex items-center gap-3" aria-label="Polish Hill — головна">
       <img src="/images/client/ph-6.jpg" alt="Polish Hill" class="h-9 w-9 rounded-[var(--ph-radius-sm)] object-cover" />
-      <span class="text-[1.1rem] font-semibold tracking-tight" style="font-family: var(--font-display);">
+      <span class="header-logo-text text-[1.1rem] font-semibold tracking-tight transition-colors duration-300" style="font-family: var(--font-display);">
         Polish Hill
       </span>
     </a>
@@ -35,7 +35,7 @@ const navItems = [
         <li>
           <a
             href={href}
-            class="rounded-[var(--ph-radius-md)] px-3.5 py-2 text-[0.8125rem] font-medium text-[var(--ph-ink-soft)] transition-colors duration-200 hover:bg-[var(--ph-ink)]/[0.04] hover:text-[var(--ph-ink)]"
+            class="header-nav-link rounded-[var(--ph-radius-md)] px-3.5 py-2 text-[0.8125rem] font-medium transition-colors duration-200"
           >
             {label}
           </a>
@@ -47,14 +47,14 @@ const navItems = [
     <div class="flex items-center gap-3">
       <!-- Phone -->
       <a
-        href="tel:+380674406070"
-        class="hidden items-center gap-1.5 text-[0.8125rem] font-semibold text-[var(--ph-ink)] lg:flex"
+        href="tel:+380681700110"
+        class="header-phone hidden items-center gap-1.5 text-[0.8125rem] font-semibold transition-colors duration-300 lg:flex"
         aria-label="Зателефонувати"
       >
-        <svg class="h-4 w-4 text-[var(--ph-forest)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
         </svg>
-        +380 67 440 60 70
+        +380 68 170 01 10
       </a>
 
       <!-- CTA (hidden on mobile, the base Button has inline-flex which overrides hidden, so we wrap) -->
@@ -72,14 +72,14 @@ const navItems = [
       <!-- Mobile hamburger -->
       <button
         id="mobile-menu-toggle"
-        class="relative z-10 flex h-10 w-10 items-center justify-center rounded-[var(--ph-radius-md)] transition-colors hover:bg-[var(--ph-ink)]/[0.05] lg:hidden"
+        class="relative z-10 flex h-10 w-10 items-center justify-center rounded-[var(--ph-radius-md)] transition-colors hover:bg-white/10 lg:hidden"
         aria-label="Меню"
         aria-expanded="false"
       >
         <div class="flex w-5 flex-col gap-[5px]" id="hamburger-icon">
-          <span class="block h-[1.5px] w-full origin-center rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
-          <span class="block h-[1.5px] w-full rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
-          <span class="block h-[1.5px] w-full origin-center rounded-full bg-[var(--ph-ink)] transition-all duration-300"></span>
+          <span class="header-hamburger-line block h-[1.5px] w-full origin-center rounded-full transition-all duration-300"></span>
+          <span class="header-hamburger-line block h-[1.5px] w-full rounded-full transition-all duration-300"></span>
+          <span class="header-hamburger-line block h-[1.5px] w-full origin-center rounded-full transition-all duration-300"></span>
         </div>
       </button>
     </div>
@@ -128,10 +128,10 @@ const navItems = [
 
     <div class="mt-10 flex flex-col gap-4">
       <a
-        href="tel:+380674406070"
+        href="tel:+380681700110"
         class="text-lg font-semibold text-[var(--ph-ink)]"
       >
-        +380 67 440 60 70
+        +380 68 170 01 10
       </a>
       <Button as="button" variant="primary" size="lg" class="w-full" data-modal-trigger="lead">
         {i.cta.bookTour}
@@ -157,11 +157,12 @@ const navItems = [
     const scrolled = y > 20;
     const scrollingDown = y > lastY && y > 80;
 
+    header.classList.toggle("header-transparent", !scrolled);
+    header.classList.toggle("header-solid", scrolled);
     header.classList.toggle("glass", scrolled);
     header.classList.toggle("border-[var(--ph-border)]", scrolled);
     header.classList.toggle("border-transparent", !scrolled);
 
-    // Hide on scroll down, show on scroll up (standard behavior)
     if (scrollingDown && !open) {
       header.style.transform = "translateY(-100%)";
     } else {
@@ -234,3 +235,45 @@ const navItems = [
     btn.addEventListener("click", () => closeMobileMenu());
   });
 </script>
+
+<style>
+  .header-transparent .header-logo-text {
+    color: white;
+  }
+  .header-transparent .header-nav-link {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .header-transparent .header-nav-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .header-transparent .header-phone {
+    color: white;
+  }
+  .header-transparent .header-phone svg {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .header-transparent .header-hamburger-line {
+    background-color: white;
+  }
+
+  .header-solid .header-logo-text {
+    color: var(--ph-ink);
+  }
+  .header-solid .header-nav-link {
+    color: var(--ph-ink-soft);
+  }
+  .header-solid .header-nav-link:hover {
+    color: var(--ph-ink);
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .header-solid .header-phone {
+    color: var(--ph-ink);
+  }
+  .header-solid .header-phone svg {
+    color: var(--ph-forest);
+  }
+  .header-solid .header-hamburger-line {
+    background-color: var(--ph-ink);
+  }
+</style>

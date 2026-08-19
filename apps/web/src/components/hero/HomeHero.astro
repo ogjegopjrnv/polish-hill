@@ -7,25 +7,25 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
 const i = t(locale);
 
 const stats = [
-  { value: "8 га", label: locale === "uk" ? "Територія містечка" : "Total area" },
-  { value: "17", label: locale === "uk" ? "Котеджів у проєкті" : "Cottages total" },
-  { value: "10 сот", label: locale === "uk" ? "Загальна площа ділянок" : "Total plot area" },
+  { value: "4", label: locale === "uk" ? "Земельних ділянки" : "Land plots" },
+  { value: "2", label: locale === "uk" ? "Дуплекси" : "Duplexes" },
+  { value: "195–200 м²", label: locale === "uk" ? "Площа секції" : "Section area" },
   { value: "100%", label: locale === "uk" ? "Юридична прозорість" : "Legal transparency" },
 ];
 
 const heroImages = [
-  "/images/client/hero-2.jpg",
-  "/images/client/hero-1.jpg",
+  "/images/client/duplex-1.jpg",
+  "/images/client/duplex-2.jpg",
 ];
 ---
 
-<section class="relative min-h-dvh overflow-hidden" aria-label="Hero">
+<section class="relative min-h-[100svh] overflow-hidden" aria-label="Hero">
   <!-- Background slideshow -->
   <div class="absolute inset-0" id="hero-slideshow">
     {heroImages.map((src, idx) => (
       <img
         src={src}
-        alt={`Polish Hill — котеджне містечко ${idx + 1}`}
+        alt={`Дуплекси в Оболонському районі ${idx + 1}`}
         class:list={[
           "hero-slide absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-[1500ms] ease-[var(--ph-ease)]",
           idx === 0 ? "opacity-100" : "opacity-0",
@@ -55,10 +55,10 @@ const heroImages = [
   </div>
 
   <!-- Content positioned at bottom-left -->
-  <div class="relative z-10 flex min-h-dvh flex-col justify-end">
-    <div class="container-ph pb-12 pt-24 md:pb-20 md:pt-32">
+  <div class="relative z-10 flex min-h-[100svh] flex-col justify-center">
+    <div class="container-ph pb-10 pt-8 md:pb-12 md:pt-10">
       <!-- Eyebrow pill -->
-      <div class="mb-8 reveal" style="transition-delay: 100ms;">
+      <div class="mb-5 reveal" style="transition-delay: 100ms;">
         <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-5 py-2 text-[0.8125rem] font-medium text-white/90 backdrop-blur-md">
           <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"></span>
           {i.hero.eyebrow}
@@ -66,25 +66,25 @@ const heroImages = [
       </div>
 
       <!-- Heading -->
-      <h1 class="reveal max-w-[48rem] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" style="transition-delay: 200ms;">
+      <h1 class="reveal max-w-[48rem] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] text-[clamp(2rem,4.5vw,3.75rem)]" style="transition-delay: 200ms;">
         {i.hero.heading}
       </h1>
 
       <!-- Subtitle -->
-      <p class="reveal mt-6 max-w-xl text-[1.125rem] leading-relaxed text-white/75 md:text-[1.25rem]" style="transition-delay: 300ms;">
+      <p class="reveal mt-4 max-w-xl text-[1rem] leading-relaxed text-white/75 md:text-[1.125rem]" style="transition-delay: 300ms;">
         {i.hero.subtitle}
       </p>
 
       <!-- CTAs -->
-      <div class="reveal mt-10 flex flex-wrap items-center gap-4" style="transition-delay: 400ms;">
-        <Button href="#cottages" variant="primary" size="lg" class="shadow-[0_4px_20px_rgba(45,74,58,0.4)]">
+      <div class="reveal mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4" style="transition-delay: 400ms;">
+        <Button href="#cottages" variant="primary" size="lg" class="w-full sm:w-auto shadow-[0_4px_20px_rgba(45,74,58,0.4)]">
           {i.cta.chooseCottage}
         </Button>
         <Button
           as="button"
           variant="outline"
           size="lg"
-          class="border-white/25 text-white hover:border-white/50 hover:text-white bg-white/[0.06] backdrop-blur-sm"
+          class="w-full sm:w-auto border-white/25 text-white hover:border-white/50 hover:text-white bg-white/[0.06] backdrop-blur-sm"
           data-modal-trigger="lead"
         >
           {i.cta.bookTour}
@@ -92,14 +92,14 @@ const heroImages = [
       </div>
 
       <!-- Stats bar -->
-      <div class="reveal mt-16 md:mt-20" style="transition-delay: 500ms;">
-        <div class="grid grid-cols-2 gap-6 border-t border-white/[0.12] pt-8 md:grid-cols-4 md:gap-12">
+      <div class="reveal mt-6 md:mt-8" style="transition-delay: 500ms;">
+        <div class="grid grid-cols-2 gap-3 border-t border-white/[0.12] pt-3 md:grid-cols-4 md:gap-8">
           {stats.map(({ value, label }) => (
-            <div class="flex flex-col gap-1">
-              <span class="tabular-nums text-[1.75rem] font-bold tracking-tight text-white md:text-[2rem]">
+            <div class="flex flex-col">
+              <span class="tabular-nums text-[1.25rem] font-bold tracking-tight text-white md:text-[1.5rem]">
                 {value}
               </span>
-              <span class="text-[0.8125rem] leading-snug text-white/50">
+              <span class="text-[0.75rem] leading-snug text-white/50">
                 {label}
               </span>
             </div>
@@ -150,7 +150,6 @@ const heroImages = [
     clearInterval(interval);
   }
 
-  // Dot click handlers
   dots.forEach((dot) => {
     dot.addEventListener('click', () => {
       const idx = parseInt(dot.dataset.slideTo || '0', 10);
@@ -160,10 +159,8 @@ const heroImages = [
     });
   });
 
-  // Start autoplay
   startAutoplay();
 
-  // Pause on hover (optional UX improvement)
   const slideshow = document.getElementById('hero-slideshow');
   slideshow?.addEventListener('mouseenter', stopAutoplay);
   slideshow?.addEventListener('mouseleave', startAutoplay);

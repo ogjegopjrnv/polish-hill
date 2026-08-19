@@ -1,0 +1,60 @@
+---
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+---
+
+<section class="section bg-[var(--ph-bg)]">
+  <div class="container-ph">
+    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+      <!-- Text -->
+      <div class="reveal">
+        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+          {locale === "uk" ? "Реалізовані проєкти" : "Completed projects"}
+        </span>
+        <h2 class="mt-3">
+          {locale === "uk" ? "«Польський куточок»" : "Polish Hill"}
+        </h2>
+        <p class="mt-4 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Один із наших уже реалізованих проєктів — «Польський куточок», розташований у Софіївській Борщагівці за адресою: вул. Скіфська, 79."
+            : "One of our completed projects — Polish Hill, located in Sofiyivska Borshchahivka at 79 Skifska St."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Це завершений житловий проєкт, який найкраще демонструє наш підхід до будівництва: комфортне та продумане житло, якісне виконання і затишний простір для щоденного життя."
+            : "A completed residential project that best demonstrates our construction approach: comfortable, thoughtful housing, quality execution and cozy living space."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Ми не лише показуємо майбутні проєкти — ми можемо показати те, що вже побудували. «Польський куточок» — це наша реалізована робота, яку можна побачити наживо."
+            : "We don't just show future projects — we can show what we've already built. Polish Hill is our completed work you can see in person."}
+        </p>
+
+        <div class="mt-6 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-4">
+          <p class="text-[0.8125rem] font-semibold text-[var(--ph-ink)]">
+            {locale === "uk" ? "Адреса реалізованого проєкту:" : "Project address:"}
+          </p>
+          <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-soft)]">
+            {locale === "uk"
+              ? "Софіївська Борщагівка, вул. Скіфська, 79"
+              : "Sofiyivska Borshchahivka, 79 Skifska St."}
+          </p>
+        </div>
+      </div>
+
+      <!-- Image — use existing townhouse photos -->
+      <div class="reveal" style="transition-delay: 100ms;">
+        <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-lg)]">
+          <img
+            src="/images/client/hero-1.jpg"
+            alt={locale === "uk" ? "Польський куточок — реалізований проєкт" : "Polish Hill — completed project"}
+            class="aspect-[4/3] w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

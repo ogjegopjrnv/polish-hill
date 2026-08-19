@@ -7,7 +7,7 @@ interface Props {
 const t = {
   uk: {
     title: "Калькулятор платежів",
-    homes: "Кількість будинків",
+    section: "Секція дуплексу",
     downPayment: "Перший внесок, %",
     term: "Термін розстрочки, міс.",
     totalPrice: "Загальна вартість",
@@ -19,7 +19,7 @@ const t = {
   },
   en: {
     title: "Payment calculator",
-    homes: "Homes",
+    section: "Duplex section",
     downPayment: "Down payment, %",
     term: "Term, months",
     totalPrice: "Total price",
@@ -31,8 +31,10 @@ const t = {
   },
 };
 
-const HOUSE_AREA = 170;
-const PRICE_PER_SQM = 1000;
+const SECTIONS = [
+  { area: 195, price: 195_000 },
+  { area: 200, price: 200_000 },
+];
 
 function formatUSD(n: number) {
   return new Intl.NumberFormat("en-US", {
@@ -45,11 +47,12 @@ function formatUSD(n: number) {
 export default function PaymentCalculator({ locale = "uk" }: Props) {
   const i = t[locale];
 
-  const [homes, setHomes] = useState(1);
+  const [sectionIdx, setSectionIdx] = useState(0);
   const [downPct, setDownPct] = useState(30);
   const [termMonths, setTermMonths] = useState(18);
 
-  const total = homes * HOUSE_AREA * PRICE_PER_SQM;
+  const section = SECTIONS[sectionIdx];
+  const total = section.price;
   const downAmount = Math.round(total * (downPct / 100));
   const remaining = total - downAmount;
   const monthly = termMonths > 0 ? Math.round(remaining / termMonths) : 0;
@@ -61,11 +64,11 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       import("@lib/analytics/analytics").then(({ trackCalculatorInteraction }) => {
-        trackCalculatorInteraction({ homes, downPayment: downPct, term: termMonths, total, monthly });
+        trackCalculatorInteraction({ homes: 1, downPayment: downPct, term: termMonths, total, monthly });
       });
     }, 1500);
     return () => clearTimeout(debounceRef.current);
-  }, [homes, downPct, termMonths]);
+  }, [sectionIdx, downPct, termMonths]);
 
   return (
     <div className="rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-6 shadow-[var(--ph-shadow-md)] sm:p-8 md:p-10">
@@ -76,17 +79,34 @@ export default function PaymentCalculator({ locale = "uk" }: Props) {
         {i.title}
       </h3>
 
-      {/* Sliders */}
+      {/* Section picker + Sliders */}
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <SliderField
-          label={i.homes}
-          value={homes}
-          min={1}
-          max={5}
-          step={1}
-          unit={locale === "uk" ? "шт." : "pcs."}
-          onChange={setHomes}
-        />
+        <div>
+          <span
+            className="mb-2 block text-xs font-medium"
+            style={{ color: "var(--ph-ink-soft)" }}
+          >
+            {i.section}
+          </span>
+          <div className="flex gap-2">
+            {SECTIONS.map((s, idx) => (
+              <button
+                key={s.area}
+                type="button"
+                onClick={() => setSectionIdx(idx)}
+                className="flex-1 rounded-[var(--ph-radius-lg)] border px-4 py-2.5 text-sm font-bold tabular-nums transition-all"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  background: idx === sectionIdx ? "var(--ph-forest)" : "var(--ph-bg)",
+                  color: idx === sectionIdx ? "#fff" : "var(--ph-ink)",
+                  borderColor: idx === sectionIdx ? "var(--ph-forest)" : "var(--ph-border)",
+                }}
+              >
+                {s.area} м²
+              </button>
+            ))}
+          </div>
+        </div>
         <SliderField
           label={i.downPayment}
           value={downPct}

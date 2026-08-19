@@ -1,5 +1,5 @@
 ---
-import { Medal } from "lucide-astro";
+import { Medal, Percent } from "lucide-astro";
 import PaymentCalculator from "@components/calculator/PaymentCalculator";
 import type { Locale } from "@lib/i18n/translations";
 
@@ -7,16 +7,16 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
 
 const steps = locale === "uk"
   ? [
-    { num: "01", title: "Обрати котедж", text: "Перегляньте каталог або відвідайте містечко." },
+    { num: "01", title: "Обрати секцію", text: "Перегляньте доступні дуплекси або відвідайте об'єкт." },
     { num: "02", title: "Підписати договір", text: "Фіксація ціни в доларах." },
-    { num: "03", title: "Перший внесок", text: "Від 30%. Решта — безпроцентна розстрочка." },
-    { num: "04", title: "Щомісячні платежі", text: "Рівними частинами 1.5 року (18 міс). Без банків." },
+    { num: "03", title: "Перший внесок", text: "Від 30%. Решта — безвідсоткове розтермінування." },
+    { num: "04", title: "Щомісячні платежі", text: "Рівними частинами до 18 місяців. Без банків." },
   ]
   : [
-    { num: "01", title: "Choose", text: "Browse the catalog or visit." },
+    { num: "01", title: "Choose", text: "Browse available duplexes or visit." },
     { num: "02", title: "Contract", text: "Price fixed in USD." },
     { num: "03", title: "Down payment", text: "From 30%. Rest interest-free." },
-    { num: "04", title: "Monthly", text: "Equal parts 1.5 years (18 mo). No banks." },
+    { num: "04", title: "Monthly", text: "Equal parts up to 18 months. No banks." },
   ];
 ---
 
@@ -27,7 +27,7 @@ const steps = locale === "uk"
         {locale === "uk" ? "Фінанси" : "Finance"}
       </span>
       <h2 class="mt-3">
-        {locale === "uk" ? "0% розстрочка на 1.5 року" : "0% installment for 1.5 years"}
+        {locale === "uk" ? "0% розтермінування до 18 місяців" : "0% installment for up to 18 months"}
       </h2>
     </div>
 
@@ -47,21 +47,38 @@ const steps = locale === "uk"
       <PaymentCalculator client:visible locale={locale} />
     </div>
 
-    <div class="reveal mt-12 mx-auto max-w-2xl rounded-[var(--ph-radius-2xl)] border-2 border-[var(--ph-forest)]/20 bg-[var(--ph-forest)]/[0.03] p-8 text-center">
-      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-        <Medal size={24} strokeWidth={1.5} />
+    {/* Discounts */}
+    <div class="reveal mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 mx-auto max-w-3xl">
+      <div class="rounded-[var(--ph-radius-2xl)] border-2 border-[var(--ph-forest)]/20 bg-[var(--ph-forest)]/[0.03] p-8 text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <Percent size={24} strokeWidth={1.5} />
+        </div>
+        <h3 class="mt-4">
+          {locale === "uk" ? "5% при 100% оплаті" : "5% for full payment"}
+        </h3>
+        <p class="mt-2 text-[0.875rem] text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Знижка 5% при повній оплаті вартості секції."
+            : "5% discount for full upfront payment."}
+        </p>
       </div>
-      <h3 class="mt-4">
-        {locale === "uk" ? "Спеціальні умови для ЗСУ" : "Special terms for military"}
-      </h3>
-      <p class="mt-2 text-[0.875rem] text-[var(--ph-ink-soft)]">
-        {locale === "uk"
-          ? "Знижка та гнучкий графік оплати для військовослужбовців та їх сімей."
-          : "Discount and flexible payment for military personnel and their families."}
-      </p>
-      <a href="tel:+380674406070" class="mt-4 inline-block text-lg font-semibold text-[var(--ph-forest)]">
-        +380 67 440 60 70
-      </a>
+
+      <div class="rounded-[var(--ph-radius-2xl)] border-2 border-[var(--ph-forest)]/20 bg-[var(--ph-forest)]/[0.03] p-8 text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+          <Medal size={24} strokeWidth={1.5} />
+        </div>
+        <h3 class="mt-4">
+          {locale === "uk" ? "Знижки для ЗСУ" : "Military discounts"}
+        </h3>
+        <p class="mt-2 text-[0.875rem] text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "5% для військовослужбовців. 5% для сімей загиблих Захисників і Захисниць України."
+            : "5% for military. 5% for families of fallen Defenders of Ukraine."}
+        </p>
+        <a href="tel:+380681700110" class="mt-4 inline-block text-lg font-semibold text-[var(--ph-forest)]">
+          +380 68 170 01 10
+        </a>
+      </div>
     </div>
   </div>
 </section>

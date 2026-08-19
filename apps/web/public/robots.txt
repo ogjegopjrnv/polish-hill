@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ph.kiev.ua/sitemap-index.xml

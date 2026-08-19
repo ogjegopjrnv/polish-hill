@@ -3,333 +3,185 @@ import { lots, formatPrice } from "@data/lots";
 import type { Locale } from "@lib/i18n/translations";
 
 const locale = (Astro.currentLocale ?? "uk") as Locale;
-
-const phase2 = lots.filter((l) => l.phase === 2);
 const availableCount = lots.filter((l) => l.status === "available").length;
 
-const statusColors: Record<string, string> = {
-  available: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  reserved: "bg-amber-50 text-amber-700 border-amber-200",
-  sold: "bg-neutral-100 text-neutral-500 border-neutral-200",
-};
-
-function statusLabel(status: string) {
-  return locale === "uk"
-    ? { available: "Вільний", reserved: "Резерв", sold: "Продано" }[status]
-    : { available: "Available", reserved: "Reserved", sold: "Sold" }[status];
-}
+// Zone positions aligned to actual building edges in duplex-1.jpg (1280px wide)
+// Left duplex: ~65–590px, right duplex: ~690–1215px
+// Zone positions from pixel analysis of duplex-1.jpg (1280×709):
+// Left duplex x=70–540, division at x=305; right duplex x=700–1210, division at x=975
+const zones = [
+  { id: "duplex-a2", label: "A2", area: 200, price: 200_000, left: 5.5, width: 18.3 },
+  { id: "duplex-a1", label: "A1", area: 195, price: 195_000, left: 23.8, width: 18.4 },
+  { id: "duplex-b2", label: "B2", area: 200, price: 200_000, left: 54.7, width: 21.5 },
+  { id: "duplex-b1", label: "B1", area: 195, price: 195_000, left: 76.2, width: 18.5 },
+];
 ---
 
 <section id="cottages" class="section bg-[var(--ph-surface)]">
   <div class="container-ph">
     <div class="reveal mx-auto max-w-2xl text-center">
       <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
-        {locale === "uk" ? "II черга — продаж відкрито" : "Phase II — now selling"}
+        {locale === "uk" ? "Продаж відкрито" : "Now selling"}
       </span>
       <h2 class="mt-3">
-        {locale === "uk" ? "Оберіть свій таунхаус" : "Choose your townhouse"}
+        {locale === "uk" ? "Оберіть свій дуплекс" : "Choose your duplex"}
       </h2>
       <p class="mt-4 text-[var(--ph-ink-soft)]">
         {locale === "uk"
-          ? `${availableCount} таунхаусів вільні. Площа 170 м², 3 поверхи, від $1 000/м².`
-          : `${availableCount} townhouses available. 170 m², 3 floors, from $1,000/m².`}
+          ? `${availableCount} секції вільні. Натисніть на секцію для деталей.`
+          : `${availableCount} sections available. Click a section for details.`}
       </p>
     </div>
 
-    {/* Compact lot cards grid */}
-    <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {phase2.map((lot, idx) => (
+    <!-- Desktop: interactive duplex map -->
+    <div class="duplex-map reveal relative mt-14 hidden overflow-hidden rounded-[var(--ph-radius-2xl)] md:block">
+      <img
+        src="/images/client/duplex-1.jpg"
+        alt="Дуплекси — фронтальний вигляд"
+        class="w-full block"
+        loading="lazy"
+        decoding="async"
+      />
+
+      {zones.map((z) => (
         <div
-          class:list={[
-            "reveal group relative overflow-hidden rounded-[var(--ph-radius-xl)] border bg-[var(--ph-bg)] transition-all duration-[var(--ph-duration-ui)]",
-            lot.status !== "sold"
-              ? "border-[var(--ph-border)] hover:border-[var(--ph-forest)]/20 hover:shadow-[var(--ph-shadow-lg)] cursor-pointer"
-              : "border-[var(--ph-border)] opacity-70",
-          ]}
-          style={`transition-delay: ${idx * 60}ms;`}
-          data-cottage-trigger={lot.status !== "sold" ? lot.id : undefined}
-          role={lot.status !== "sold" ? "button" : undefined}
-          tabindex={lot.status !== "sold" ? "0" : undefined}
+          class="zone"
+          style={`left: ${z.left}%; width: ${z.width}%;`}
+          data-cottage-trigger={z.id}
+          role="button"
+          tabindex="0"
+          aria-label={`Секція ${z.label}, ${z.area} м², ${formatPrice(z.price)}`}
         >
-          {/* Image */}
-          <div class="relative aspect-[16/10] overflow-hidden">
+          <div class="zone-label">
+            <span class="zone-name">Секція {z.label}</span>
+            <span class="zone-specs">{z.area} м² · {formatPrice(z.price)}</span>
+          </div>
+        </div>
+      ))}
+
+      <div class="duplex-group-label" style="left: 24%;">Дуплекс A</div>
+      <div class="duplex-group-label" style="left: 65%;">Дуплекс B</div>
+    </div>
+
+    <!-- Mobile: card list -->
+    <div class="mt-10 grid grid-cols-2 gap-3 md:hidden">
+      {lots.map((lot) => (
+        <div
+          class="reveal cursor-pointer overflow-hidden rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] transition-all duration-200 active:scale-[0.98]"
+          data-cottage-trigger={lot.id}
+          role="button"
+          tabindex="0"
+        >
+          <div class="relative aspect-[3/4] overflow-hidden">
             <img
               src={lot.image}
-              alt={`Таунхаус №${lot.number}`}
-              class:list={[
-                "h-full w-full object-cover transition-transform duration-700 ease-[var(--ph-ease)]",
-                lot.status === "available" && "group-hover:scale-105",
-              ]}
+              alt={`Секція ${lot.number}`}
+              class="h-full w-full object-cover"
               loading="lazy"
               decoding="async"
             />
-            <div class="absolute top-2.5 left-2.5">
-              <span class:list={["inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[0.625rem] font-semibold", statusColors[lot.status]]}>
-                <span class:list={[
-                  "h-1.5 w-1.5 rounded-full",
-                  lot.status === "available" && "bg-emerald-500",
-                  lot.status === "reserved" && "bg-amber-500",
-                  lot.status === "sold" && "bg-neutral-400",
-                ]}></span>
-                {statusLabel(lot.status)}
-              </span>
-            </div>
+            <span class="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200 px-2 py-0.5 text-[0.5625rem] font-semibold">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              {locale === "uk" ? "Вільний" : "Available"}
+            </span>
           </div>
-
-          {/* Info */}
-          <div class="p-4">
-            <div class="flex items-start justify-between">
-              <div>
-                <h3 class="text-base leading-tight">
-                  №{lot.number}
-                </h3>
-                <p class="mt-0.5 text-[0.75rem] text-[var(--ph-ink-muted)]">
-                  {lot.area} м² · {lot.floors} пов. · <span class="font-semibold text-[#2d8a4e]">Діл. {(lot.landArea / 100).toFixed(2)} сот</span>
-                </p>
-              </div>
-              {lot.status !== "sold" && (
-                <span class="tabular-nums text-base font-bold text-[var(--ph-forest)]">
-                  {formatPrice(lot.totalPrice)}
-                </span>
-              )}
+          <div class="p-3">
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-[0.875rem] font-semibold">Секція {lot.number}</h3>
+              <span class="tabular-nums text-[0.875rem] font-bold text-[var(--ph-forest)]">{formatPrice(lot.totalPrice)}</span>
             </div>
-
-            {lot.features.length > 0 && (
-              <div class="mt-3 flex flex-wrap gap-1">
-                {lot.features.slice(0, 3).map((f) => (
-                  <span class="rounded-[var(--ph-radius-sm)] bg-[var(--ph-surface)] px-2 py-0.5 text-[0.625rem] text-[var(--ph-ink-muted)]">
-                    {f}
-                  </span>
-                ))}
-              </div>
-            )}
+            <p class="mt-1 text-[0.6875rem] text-[var(--ph-ink-muted)]">{lot.area} м² · {lot.floors} пов.</p>
           </div>
         </div>
       ))}
     </div>
-
-    {/* Floor plan */}
-    <div class="reveal mt-14 rounded-[var(--ph-radius-2xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 md:p-10">
-      <div class="text-center">
-        <h3 class="text-lg">
-          {locale === "uk" ? "Планування таунхаусу" : "Townhouse floor plan"}
-        </h3>
-        <p class="mx-auto mt-2 text-center text-[0.8125rem] text-[var(--ph-ink-soft)]">
-          {locale === "uk"
-            ? "170 м² на 3 поверхи — продумане планування для комфортного життя."
-            : "170 m² across 3 floors — thoughtful layout for comfortable living."}
-        </p>
-      </div>
-
-      {/* Desktop — full SVG */}
-      <div class="mt-8 hidden md:block">
-        <img
-          src="/images/client/polish-hill-plan.svg"
-          alt={locale === "uk" ? "Планування таунхаусу Polish Hill — 3 поверхи" : "Polish Hill townhouse floor plan — 3 floors"}
-          class="mx-auto w-full max-w-5xl cursor-zoom-in"
-          loading="lazy"
-          decoding="async"
-          data-plan-zoom
-        />
-      </div>
-
-      {/* Mobile — floors stacked vertically */}
-      <div class="mt-6 flex flex-col gap-6 md:hidden">
-        {([
-          { label: "1-й поверх", src: "/images/client/polish-hill-floor-1.svg" },
-          { label: "2-й поверх", src: "/images/client/polish-hill-floor-2.svg" },
-          { label: "3-й поверх", src: "/images/client/polish-hill-floor-3.svg" },
-        ] as const).map(({ label, src }) => (
-          <div>
-            <p class="mb-2 text-center text-[0.8125rem] font-semibold text-[var(--ph-forest)]">
-              {label}
-            </p>
-            <img
-              src={src}
-              alt={label}
-              class="w-full rounded-[var(--ph-radius-lg)] cursor-zoom-in"
-              loading="lazy"
-              decoding="async"
-              data-plan-zoom
-            />
-          </div>
-        ))}
-      </div>
-
-      <p class="mx-auto mt-4 text-center text-[0.6875rem] text-[var(--ph-ink-muted)]">
-        {locale === "uk" ? "Натисніть для збільшення" : "Tap to zoom"}
-      </p>
-    </div>
-
-    {/* Zoom lightbox */}
-    <div
-      id="plan-lightbox"
-      class="fixed inset-0 z-[200] hidden bg-black/90 backdrop-blur-sm"
-      aria-hidden="true"
-    >
-      <button
-        id="plan-lightbox-close"
-        class="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
-        aria-label="Закрити"
-      >
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-      <div id="plan-lightbox-viewport" class="flex h-full w-full items-center justify-center overflow-hidden touch-none">
-        <img id="plan-lightbox-img" src="" alt="" class="max-h-none max-w-none select-none" draggable="false" />
-      </div>
-    </div>
-
-    <script>
-      {
-        const lb = document.getElementById('plan-lightbox')!;
-        const vp = document.getElementById('plan-lightbox-viewport')!;
-        const img = document.getElementById('plan-lightbox-img') as HTMLImageElement;
-        const closeBtn = document.getElementById('plan-lightbox-close')!;
-
-        let scale = 1;
-        let tx = 0;
-        let ty = 0;
-        let startDist = 0;
-        let startScale = 1;
-        let dragging = false;
-        let dragStart = { x: 0, y: 0 };
-        let dragTxStart = 0;
-        let dragTyStart = 0;
-
-        const MIN_SCALE = 0.5;
-        const MAX_SCALE = 5;
-
-        function applyTransform() {
-          img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-        }
-
-        function open(src: string, alt: string) {
-          img.src = src;
-          img.alt = alt;
-          scale = 1; tx = 0; ty = 0;
-          applyTransform();
-          lb.classList.remove('hidden');
-          lb.setAttribute('aria-hidden', 'false');
-          document.body.style.overflow = 'hidden';
-        }
-
-        function close() {
-          lb.classList.add('hidden');
-          lb.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-        }
-
-        // Open triggers
-        document.querySelectorAll<HTMLImageElement>('[data-plan-zoom]').forEach(el => {
-          el.addEventListener('click', () => open(el.src, el.alt));
-        });
-
-        // Close
-        closeBtn.addEventListener('click', close);
-        document.addEventListener('keydown', e => {
-          if (e.key === 'Escape' && !lb.classList.contains('hidden')) close();
-        });
-        vp.addEventListener('click', e => { if (e.target === vp) close(); });
-
-        // Double-tap / double-click to toggle zoom
-        let lastTap = 0;
-        vp.addEventListener('click', e => {
-          if (e.target !== img) return;
-          const now = Date.now();
-          if (now - lastTap < 300) {
-            if (scale > 1.2) {
-              scale = 1; tx = 0; ty = 0;
-            } else {
-              const rect = vp.getBoundingClientRect();
-              const cx = e.clientX - rect.left - rect.width / 2;
-              const cy = e.clientY - rect.top - rect.height / 2;
-              scale = 3;
-              tx = -cx * 2;
-              ty = -cy * 2;
-            }
-            applyTransform();
-          }
-          lastTap = now;
-        });
-
-        // Mouse wheel zoom
-        vp.addEventListener('wheel', e => {
-          e.preventDefault();
-          const delta = e.deltaY > 0 ? 0.9 : 1.1;
-          const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * delta));
-          const rect = vp.getBoundingClientRect();
-          const cx = e.clientX - rect.left - rect.width / 2;
-          const cy = e.clientY - rect.top - rect.height / 2;
-          tx = cx - (cx - tx) * (newScale / scale);
-          ty = cy - (cy - ty) * (newScale / scale);
-          scale = newScale;
-          applyTransform();
-        }, { passive: false });
-
-        // Touch: pinch-to-zoom + pan
-        vp.addEventListener('touchstart', e => {
-          if (e.touches.length === 2) {
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            startDist = Math.hypot(dx, dy);
-            startScale = scale;
-          } else if (e.touches.length === 1 && scale > 1) {
-            dragging = true;
-            dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            dragTxStart = tx;
-            dragTyStart = ty;
-          }
-        }, { passive: true });
-
-        vp.addEventListener('touchmove', e => {
-          if (e.touches.length === 2) {
-            e.preventDefault();
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            const dist = Math.hypot(dx, dy);
-            scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, startScale * (dist / startDist)));
-            applyTransform();
-          } else if (e.touches.length === 1 && dragging) {
-            e.preventDefault();
-            tx = dragTxStart + (e.touches[0].clientX - dragStart.x);
-            ty = dragTyStart + (e.touches[0].clientY - dragStart.y);
-            applyTransform();
-          }
-        }, { passive: false });
-
-        vp.addEventListener('touchend', () => { dragging = false; }, { passive: true });
-
-        // Mouse drag
-        vp.addEventListener('mousedown', e => {
-          if (scale <= 1 || e.target !== img) return;
-          dragging = true;
-          dragStart = { x: e.clientX, y: e.clientY };
-          dragTxStart = tx;
-          dragTyStart = ty;
-          img.style.cursor = 'grabbing';
-        });
-        window.addEventListener('mousemove', e => {
-          if (!dragging) return;
-          tx = dragTxStart + (e.clientX - dragStart.x);
-          ty = dragTyStart + (e.clientY - dragStart.y);
-          applyTransform();
-        });
-        window.addEventListener('mouseup', () => {
-          dragging = false;
-          if (scale > 1) img.style.cursor = 'grab';
-        });
-      }
-    </script>
-
-    {/* Phase I summary — compact */}
-    <div class="reveal mt-12 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-6 text-center">
-      <p class="mx-auto text-center text-[0.875rem] font-semibold text-[var(--ph-ink-soft)]">
-        {locale === "uk"
-          ? "I черга (12 котеджів) — повністю завершена та продана."
-          : "Phase I (12 cottages) — fully completed and sold."}
-      </p>
-    </div>
   </div>
 </section>
+
+<style>
+  .zone {
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    border-radius: var(--ph-radius-lg);
+  }
+
+  .zone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .duplex-map:hover .zone::before {
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .duplex-map .zone:hover::before {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 3px var(--ph-forest);
+  }
+
+  .zone-label {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: var(--ph-radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+
+  .zone:hover .zone-label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .zone-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ph-forest-deep);
+  }
+
+  .zone-specs {
+    font-size: 0.75rem;
+    color: var(--ph-ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .duplex-group-label {
+    position: absolute;
+    top: 4%;
+    transform: translateX(-50%);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: white;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    padding: 4px 14px;
+    border-radius: 100px;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  :root[data-theme="dark"] .zone-label {
+    background: rgba(30, 30, 30, 0.92);
+  }
+</style>

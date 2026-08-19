@@ -13,7 +13,7 @@ interface Props {
 
 const {
   title,
-  description = "Котеджне містечко Polish Hill — 17 котеджів на Оболоні, Київ. Від $1000/м². Безпроцентна розстрочка 1.5 року.",
+  description = "Дуплекси з прибудинковою територією в Оболонському районі Києва. 195–200 м², від $1000/м². Розтермінування до 18 місяців.",
   ogImage = "/og-default.png",
 } = Astro.props;
 
@@ -83,10 +83,23 @@ const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID || "";
       type="application/ld+json"
       set:html={JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": "RealEstateAgent",
         name: "Polish Hill",
         url: "https://ph.kiev.ua",
-        description: "Котеджне містечко Polish Hill — преміум таунхауси на Оболоні, Київ",
+        description: "Сучасні дуплекси з прибудинковою територією в Оболонському районі Києва. КДТ «Чорнобилець», урочище Наталка.",
+        telephone: "+380681700110",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "вул. Богатирська, 29а",
+          addressLocality: "Київ",
+          addressRegion: "Оболонський район",
+          addressCountry: "UA",
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 50.5504214,
+          longitude: 30.4743529,
+        },
         inLanguage: locale === "uk" ? "uk-UA" : "en-US",
       })}
     />
