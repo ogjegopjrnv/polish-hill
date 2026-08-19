@@ -60,33 +60,59 @@ const floors = [
       ))}
     </div>
 
-    {/* Technical specs */}
-    <div class="reveal mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
-      {[
-        {
-          title: locale === "uk" ? "Конструкція" : "Construction",
-          text: locale === "uk"
-            ? "Газоблок D500, утеплення мінеральною ватою, вікна REHAU, фальцева покрівля, стелі 2.80 м."
-            : "D500 gas block, mineral wool insulation, REHAU windows, standing seam roof, 2.80 m ceilings.",
-        },
-        {
-          title: locale === "uk" ? "Комунікації" : "Utilities",
-          text: locale === "uk"
-            ? "Артезіанська свердловина, автономна каналізація (септик), гібридне опалення (газ / електрокотел / камінопіч)."
-            : "Artesian well, autonomous sewage system, hybrid heating (gas / electric / fireplace stove).",
-        },
-        {
-          title: locale === "uk" ? "Безпека" : "Security",
-          text: locale === "uk"
-            ? "Територія кооперативу охороняється. Шлагбаум, постійна охорона. Вбудоване паркомісце."
-            : "Gated cooperative territory. Barrier, 24/7 security. Built-in parking.",
-        },
-      ].map(({ title, text }) => (
-        <div class="rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-6">
-          <h3 class="text-base">{title}</h3>
-          <p class="mt-2 text-[0.8125rem] leading-relaxed text-[var(--ph-ink-soft)]">{text}</p>
+    {/* Технічні характеристики */}
+    <div class="reveal mt-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+          {locale === "uk" ? "Характеристики" : "Specifications"}
+        </span>
+        <h3 class="mt-3">
+          {locale === "uk" ? "Технічні характеристики" : "Technical specifications"}
+        </h3>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {([
+          [locale === "uk" ? "Площа секцій" : "Section area", locale === "uk" ? "195 м² та 200 м²" : "195 m² and 200 m²"],
+          [locale === "uk" ? "Зовнішні стіни" : "External walls", locale === "uk" ? "Газоблок D500." : "D500 gas block."],
+          [locale === "uk" ? "Утеплення" : "Insulation", locale === "uk" ? "Мінеральна вата." : "Mineral wool."],
+          [locale === "uk" ? "Вікна" : "Windows", locale === "uk" ? "Енергозберігаючі двокамерні склопакети REHAU або аналогічного класу." : "Energy-saving double-glazed REHAU windows or equivalent."],
+          [locale === "uk" ? "Дах" : "Roof", locale === "uk" ? "Фальцева покрівля (Металочерепиця). Виробник Чехія." : "Standing seam roof (Metal tile). Czech manufacturer."],
+          [locale === "uk" ? "Висота стелі" : "Ceiling height", locale === "uk" ? "2,80 м." : "2.80 m."],
+          [locale === "uk" ? "Стан дуплексів" : "Condition", locale === "uk" ? "Після будівельників. За бажанням доступний ремонт під ключ від забудовника — вартість розраховується окремо." : "Shell & core. Turnkey renovation available from the developer — cost calculated separately."],
+          [locale === "uk" ? "Водопостачання" : "Water supply", locale === "uk" ? "Власна артезіанська свердловина." : "Private artesian well."],
+          [locale === "uk" ? "Каналізація" : "Sewage", locale === "uk" ? "Автономна станція очищення стічних вод (септик із дренажним полем)." : "Autonomous sewage treatment station (septic with drainage field)."],
+          [locale === "uk" ? "Вхідні двері" : "Front door", locale === "uk" ? "Металеві двері (тимчасові)." : "Metal doors (temporary)."],
+          [locale === "uk" ? "Паркомісце" : "Parking", locale === "uk" ? "Кожен дуплекс обладнаний власним місцем для автомобіля на території домоволодіння." : "Each duplex has its own parking space on the property grounds."],
+        ] as [string, string][]).map(([term, desc]) => (
+          <div class="rounded-[var(--ph-radius-xl)] border border-[var(--ph-border-strong)] bg-[var(--ph-surface)] p-5 shadow-[var(--ph-shadow-sm)]">
+            <p class="text-[0.75rem] font-semibold uppercase tracking-wider text-[var(--ph-forest)]">{term}</p>
+            <p class="mt-2 text-[0.875rem] leading-relaxed text-[var(--ph-ink-soft)]">{desc}</p>
+          </div>
+        ))}
+
+        {/* Опалення — інтегровано в grid */}
+        <div class="rounded-[var(--ph-radius-xl)] border-2 border-[var(--ph-forest)]/20 bg-[var(--ph-forest)]/[0.03] p-5 shadow-[var(--ph-shadow-sm)]">
+          <p class="text-[0.75rem] font-semibold uppercase tracking-wider text-[var(--ph-forest)]">
+            {locale === "uk" ? "Опалення" : "Heating"}
+          </p>
+          <p class="mt-2 text-[0.875rem] leading-relaxed text-[var(--ph-ink-soft)]">
+            {locale === "uk"
+              ? "Індивідуальна гібридна система. Покупець може обрати:"
+              : "Individual hybrid system. Options:"}
+          </p>
+          <ul class="mt-2 space-y-1 text-[0.8125rem] text-[var(--ph-ink-soft)]">
+            <li class="flex items-start gap-1.5"><span class="text-[var(--ph-forest)]">•</span> {locale === "uk" ? "підключення до газу" : "gas connection"}</li>
+            <li class="flex items-start gap-1.5"><span class="text-[var(--ph-forest)]">•</span> {locale === "uk" ? "електричний котел" : "electric boiler"}</li>
+            <li class="flex items-start gap-1.5"><span class="text-[var(--ph-forest)]">•</span> {locale === "uk" ? "камін-піч із розведенням труб" : "fireplace stove with pipe distribution"}</li>
+          </ul>
+          <p class="mt-3 text-[0.75rem] leading-relaxed text-[var(--ph-ink-muted)]">
+            {locale === "uk"
+              ? "Камін-піч поєднує функції каміна та печі: обігріває приміщення з видимим полум'ям. Котел — Bosch або аналогічного європейського виробника."
+              : "Fireplace stove combines fireplace and furnace functions. Boiler — Bosch or equivalent European manufacturer."}
+          </p>
         </div>
-      ))}
+      </div>
     </div>
   </div>
 </section>

@@ -1,38 +1,89 @@
 ---
-import { Trees, School, ShoppingCart, TrainFront, MapPin, Building2 } from "lucide-astro";
+import { Trees, School, ShoppingCart, TrainFront, MapPin, Building2, Baby, Dumbbell, UtensilsCrossed, Route } from "lucide-astro";
 import type { Locale } from "@lib/i18n/translations";
 
 const locale = (Astro.currentLocale ?? "uk") as Locale;
 
 const pois = [
-  { icon: "trees", label: locale === "uk" ? "Парк Наталка" : "Natalka Park", time: "5 хв", color: "text-emerald-600" },
-  { icon: "school", label: locale === "uk" ? "Школа, садочок" : "School", time: "5 хв", color: "text-blue-600" },
+  { icon: "trees", label: locale === "uk" ? "Парк «Наталка»" : "Natalka Park", time: "5 хв", color: "text-emerald-600" },
+  { icon: "pin", label: locale === "uk" ? "Дніпро та набережна" : "Dnipro & embankment", time: "7 хв", color: "text-cyan-600" },
   { icon: "cart", label: locale === "uk" ? "Супермаркети" : "Supermarkets", time: "5 хв", color: "text-orange-600" },
-  { icon: "train", label: locale === "uk" ? "Метро Почайна" : "Metro Pochayna", time: "15 хв", color: "text-red-600" },
-  { icon: "pin", label: locale === "uk" ? "Набережна Дніпра" : "Dnipro embankment", time: "7 хв", color: "text-cyan-600" },
-  { icon: "city", label: locale === "uk" ? "Центр Києва" : "Kyiv center", time: "20 хв", color: "text-violet-600" },
+  { icon: "baby", label: locale === "uk" ? "Дитячі садки" : "Kindergartens", time: "5 хв", color: "text-pink-600" },
+  { icon: "school", label: locale === "uk" ? "Школи" : "Schools", time: "5 хв", color: "text-blue-600" },
+  { icon: "sport", label: locale === "uk" ? "Спортивні клуби" : "Sport clubs", time: "7 хв", color: "text-amber-600" },
+  { icon: "restaurant", label: locale === "uk" ? "Ресторани" : "Restaurants", time: "5 хв", color: "text-red-600" },
+  { icon: "train", label: locale === "uk" ? "Метро «Почайна»" : "Metro Pochayna", time: "15 хв", color: "text-violet-600" },
+  { icon: "city", label: locale === "uk" ? "Громадський транспорт" : "Public transport", time: "5 хв", color: "text-slate-600" },
+  { icon: "route", label: locale === "uk" ? "Пр. Івасюка / вул. Богатирська" : "Ivasyuka Ave / Bohatyrska St", time: "3 хв", color: "text-teal-600" },
 ];
 ---
 
 <section id="location" class="section bg-[var(--ph-surface)]">
   <div class="container-ph">
-    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-      <div class="reveal">
-        <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
-          {locale === "uk" ? "Локація" : "Location"}
-        </span>
-        <h2 class="mt-3">
-          {locale === "uk" ? "Урочище Наталка — зелене серце Оболоні" : "Natalka tract — green heart of Obolon"}
-        </h2>
-        <p class="mt-4 text-[var(--ph-ink-soft)]">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "Локація" : "Location"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Урочище Наталка — одна з найпривабливіших зелених зон Києва" : "Natalka tract — one of the most attractive green areas of Kyiv"}
+      </h2>
+      <p class="mx-auto mt-4 text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "Проєкт розташований у КДТ «Чорнобилець» в урочищі Наталка Оболонського району."
+          : "The project is located in KDT Chornobylec in Natalka tract, Obolon district."}
+      </p>
+    </div>
+
+    <div class="reveal mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2">
+      <div>
+        <p class="text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "вул. Богатирська, 29а, Оболонський район. Парк Наталка, набережна Дніпра, повна інфраструктура — все поруч."
-            : "29a Bohatyrska St., Obolon district. Natalka Park, Dnipro embankment, full infrastructure nearby."}
+            ? "Урочище Наталка відоме ще з середини XIX століття. Історично ця місцевість була рибальським поселенням на березі Дніпра та популярним місцем відпочинку киян. У різні періоди тут існували природні заплави, рекреаційні території та база відпочинку. Згодом територія була впорядкована, а парк «Наталка» став одним із найкращих сучасних парків столиці."
+            : "Natalka tract has been known since the mid-19th century. Historically, it was a fishing settlement on the banks of the Dnipro and a popular recreation spot. The territory was later developed, and Natalka Park became one of the best modern parks in the capital."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "КДТ «Чорнобилець» створено у 1996 році, а земельні ділянки для дачного будівництва були надані рішеннями органів місцевої влади у 1997 році. Територія має сформовану забудову та належить до престижної котеджної частини Оболонського району."
+            : "KDT Chornobylec was established in 1996, and land plots for dacha construction were allocated by local government decisions in 1997. The territory has established development and belongs to the prestigious cottage area of Obolon district."}
         </p>
 
-        <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {/* Як дістатися */}
+        <div class="mt-6 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border-strong)] bg-[var(--ph-bg)] p-5 shadow-[var(--ph-shadow-sm)]">
+          <h4 class="text-[0.8125rem] font-semibold uppercase tracking-[0.1em] text-[var(--ph-forest)]">
+            {locale === "uk" ? "Як дістатися" : "How to get there"}
+          </h4>
+          <p class="mt-2 text-[0.8125rem] text-[var(--ph-ink-soft)]">
+            {locale === "uk"
+              ? "📍 м. Київ, Оболонський район, урочище Наталка, КДТ «Чорнобилець»."
+              : "📍 Kyiv, Obolon district, Natalka tract, KDT Chornobylec."}
+          </p>
+          <div class="mt-3 flex flex-wrap items-center gap-2 text-[0.8125rem] font-medium text-[var(--ph-ink)]">
+            {(locale === "uk"
+              ? ["Метро «Почайна»", "№ 296", "Зуп. «Сади»", "Пішки"]
+              : ["Pochayna metro", "Route 296", "Sady stop", "Walk"]
+            ).map((step, i, arr) => (
+              <>
+                <span class="rounded-[var(--ph-radius-md)] bg-[var(--ph-forest)]/[0.08] px-2.5 py-1 text-[0.75rem]">{step}</span>
+                {i < arr.length - 1 && <span class="text-[var(--ph-ink-muted)]">→</span>}
+              </>
+            ))}
+          </div>
+          <p class="mt-2.5 text-[0.75rem] text-[var(--ph-ink-muted)]">
+            {locale === "uk"
+              ? "Зручне транспортне сполучення — комплекс доступний навіть без автомобіля."
+              : "Convenient transport — the complex is accessible even without a car."}
+          </p>
+        </div>
+      </div>
+
+      {/* Інфраструктура */}
+      <div>
+        <h4 class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+          {locale === "uk" ? "Інфраструктура поруч" : "Nearby infrastructure"}
+        </h4>
+        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2">
           {pois.map(({ icon, label, time, color }) => (
-            <div class="flex items-start gap-2.5 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] px-3 py-3.5 sm:gap-3 sm:px-4">
+            <div class="flex items-start gap-2.5 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-bg)] px-3 py-3 sm:gap-3 sm:px-4">
               <div class:list={["shrink-0", color]}>
                 {icon === "trees" && <Trees size={20} strokeWidth={1.5} />}
                 {icon === "school" && <School size={20} strokeWidth={1.5} />}
@@ -40,6 +91,10 @@ const pois = [
                 {icon === "train" && <TrainFront size={20} strokeWidth={1.5} />}
                 {icon === "pin" && <MapPin size={20} strokeWidth={1.5} />}
                 {icon === "city" && <Building2 size={20} strokeWidth={1.5} />}
+                {icon === "baby" && <Baby size={20} strokeWidth={1.5} />}
+                {icon === "sport" && <Dumbbell size={20} strokeWidth={1.5} />}
+                {icon === "restaurant" && <UtensilsCrossed size={20} strokeWidth={1.5} />}
+                {icon === "route" && <Route size={20} strokeWidth={1.5} />}
               </div>
               <div class="min-w-0">
                 <p class="text-[0.75rem] font-medium leading-snug text-[var(--ph-ink)] min-[390px]:text-[0.8125rem]">{label}</p>
@@ -48,34 +103,23 @@ const pois = [
             </div>
           ))}
         </div>
-
-        {/* How to get there */}
-        <div class="mt-8 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-bg)] p-5">
-          <h4 class="text-[0.8125rem] font-semibold text-[var(--ph-ink)]">
-            {locale === "uk" ? "Як дістатися" : "How to get there"}
-          </h4>
-          <p class="mt-2 text-[0.8125rem] leading-relaxed text-[var(--ph-ink-soft)]">
-            {locale === "uk"
-              ? "Метро «Почайна» → маршрут №296 → зупинка «Сади» → пішки до КДТ «Чорнобилець»."
-              : "Metro Pochayna → route 296 → Sady stop → walk to KDT Chornobylec."}
-          </p>
-        </div>
       </div>
+    </div>
 
-      <div class="reveal" style="transition-delay: 150ms;">
-        <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-xl)]">
-          <iframe
-            src="https://maps.google.com/maps?q=50.5504214,30.4743529&hl=uk&z=15&output=embed"
-            width="100%"
-            height="400"
-            style="border:0;"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title={locale === "uk" ? "Карта розташування дуплексів" : "Duplex location map"}
-            class="aspect-[4/3] w-full"
-          ></iframe>
-        </div>
+    {/* Карта — на всю ширину */}
+    <div class="reveal mt-12">
+      <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-xl)]">
+        <iframe
+          src="https://maps.google.com/maps?q=50.5504214,30.4743529&hl=uk&z=15&output=embed"
+          width="100%"
+          height="400"
+          style="border:0;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title={locale === "uk" ? "Карта розташування дуплексів" : "Duplex location map"}
+          class="aspect-[21/9] w-full"
+        ></iframe>
       </div>
     </div>
   </div>

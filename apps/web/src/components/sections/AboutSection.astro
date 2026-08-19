@@ -1,13 +1,37 @@
 ---
+import { CheckCircle } from "lucide-astro";
 import type { Locale } from "@lib/i18n/translations";
 
 const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const duplexFeatures = [
+  locale === "uk" ? "окрему земельну ділянку" : "separate land plot",
+  locale === "uk" ? "окремий вхід" : "separate entrance",
+  locale === "uk" ? "власну прибудинкову територію" : "private yard",
+  locale === "uk" ? "індивідуальні комунікації" : "individual utilities",
+  locale === "uk" ? "окреме місце для автомобіля" : "dedicated parking",
+  locale === "uk" ? "повну приватність" : "complete privacy",
+];
+
+const whyChoose = [
+  locale === "uk" ? "престижна локація в межах Києва" : "prestigious location within Kyiv",
+  locale === "uk" ? "сучасна малоповерхова забудова" : "modern low-rise development",
+  locale === "uk" ? "автономні інженерні системи" : "autonomous engineering systems",
+  locale === "uk" ? "власна земельна ділянка" : "private land plot",
+  locale === "uk" ? "окремий вхід" : "separate entrance",
+  locale === "uk" ? "приватність" : "privacy",
+  locale === "uk" ? "енергоефективні матеріали" : "energy-efficient materials",
+  locale === "uk" ? "паркомісце" : "parking",
+  locale === "uk" ? "якісне будівництво" : "quality construction",
+  locale === "uk" ? "гнучкі умови придбання" : "flexible purchase terms",
+  locale === "uk" ? "інвестиційна привабливість та потенціал зростання вартості нерухомості" : "investment appeal and property value growth potential",
+];
 ---
 
 <section id="about" class="section bg-[var(--ph-surface)]">
   <div class="container-ph">
-    <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-      <!-- Image -->
+    <!-- Intro: image + text -->
+    <div class="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
       <div class="reveal">
         <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-lg)]">
           <img
@@ -20,23 +44,29 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </div>
       </div>
 
-      <!-- Text -->
       <div class="reveal" style="transition-delay: 100ms;">
         <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
           {locale === "uk" ? "Про проєкт" : "About"}
         </span>
         <h2 class="mt-3">
-          {locale === "uk" ? "Сучасні дуплекси в серці Оболоні" : "Modern duplexes in the heart of Obolon"}
+          {locale === "uk"
+            ? "Дуплекси з прибудинковою територією в Оболонському районі Києва"
+            : "Duplexes with private yards in Obolon district, Kyiv"}
         </h2>
         <p class="mt-4 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "На чотирьох земельних ділянках у КДТ «Чорнобилець» (урочище Наталка) передбачено будівництво двох сучасних дуплексів. Кожна секція — це повністю автономний будинок з окремим входом, власною ділянкою та вбудованим паркомісцем."
-            : "Four land plots in KDT Chornobylec (Natalka tract) host two modern duplexes. Each section is a fully autonomous house with separate entrance, private plot and built-in parking."}
+            ? "Новий проєкт сучасних дуплексів розташований за адресою: м. Київ, Оболонський район, урочище Наталка, КДТ «Чорнобилець»."
+            : "A new modern duplex project located at: Kyiv, Obolon district, Natalka tract, KDT Chornobylec."}
         </p>
         <p class="mt-3 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "КДТ «Чорнобилець» створено у 1996 році. Територія охороняється, заїзд через шлагбаум. Стан — після будівельників, за бажанням доступний ремонт під ключ від забудовника."
-            : "KDT Chornobylec established in 1996. Gated territory with barrier. Shell & core condition, turnkey renovation available from developer."}
+            ? "Це унікальна можливість придбати сучасний будинок у межах столиці, поєднавши комфорт заміського життя з усіма перевагами міської інфраструктури."
+            : "A unique opportunity to buy a modern house within the capital, combining suburban comfort with all the benefits of city infrastructure."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "На чотирьох земельних ділянках передбачено будівництво двох сучасних дуплексів, кожен із яких створений для комфортного проживання сім'ї."
+            : "Four land plots host two modern duplexes, each designed for comfortable family living."}
         </p>
 
         <div class="mt-8 grid grid-cols-2 gap-4">
@@ -52,17 +82,61 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
             </div>
           ))}
         </div>
+      </div>
+    </div>
 
-        <div class="mt-8">
-          <h4 class="text-[0.8125rem] font-semibold text-[var(--ph-ink)]">
-            {locale === "uk" ? "Що таке дуплекс?" : "What is a duplex?"}
-          </h4>
-          <p class="mt-1 text-[0.8125rem] text-[var(--ph-ink-soft)]">
-            {locale === "uk"
-              ? "Два повністю автономних будинки, об'єднаних лише однією спільною стіною. Окрема ділянка, окремий вхід, власні комунікації, повна приватність."
-              : "Two fully autonomous houses sharing only one common wall. Separate plot, entrance, utilities, complete privacy."}
-          </p>
-        </div>
+    <!-- Що таке дуплекс? — accent card -->
+    <div class="reveal mt-16 rounded-[var(--ph-radius-2xl)] border-2 border-[var(--ph-forest)]/15 bg-[var(--ph-forest)]/[0.02] p-8 sm:p-10">
+      <h3>
+        {locale === "uk" ? "Що таке дуплекс?" : "What is a duplex?"}
+      </h3>
+      <p class="mt-3 text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "Дуплекс — це сучасний формат житла, який складається з двох повністю автономних будинків, об'єднаних лише однією спільною стіною."
+          : "A duplex is a modern housing format consisting of two fully autonomous houses sharing only one common wall."}
+      </p>
+      <p class="mt-3 text-[0.9375rem] font-medium text-[var(--ph-ink)]">
+        {locale === "uk" ? "Кожна половина має:" : "Each half has:"}
+      </p>
+      <ul class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {duplexFeatures.map((item) => (
+          <li class="flex items-center gap-3 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-surface)] px-4 py-3 text-[0.875rem] text-[var(--ph-ink)]">
+            <CheckCircle size={18} class="shrink-0 text-[var(--ph-forest)]" strokeWidth={1.5} />
+            {item}
+          </li>
+        ))}
+      </ul>
+      <p class="mt-5 text-[0.875rem] text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "Територія кооперативу охороняється. Заїзд здійснюється через шлагбаум, на території постійно перебуває охоронець."
+          : "The cooperative territory is guarded. Entry is through a barrier, with a security guard permanently on site."}
+      </p>
+      <p class="mt-3 text-[0.9375rem] font-medium text-[var(--ph-ink)]">
+        {locale === "uk"
+          ? "Фактично це власний будинок із земельною ділянкою за більш доступною ціною, ніж окремий котедж."
+          : "In fact, it's your own house with a land plot at a more affordable price than a standalone cottage."}
+      </p>
+    </div>
+
+    <!-- Чому варто обрати — accent card -->
+    <div class="reveal mt-10 rounded-[var(--ph-radius-2xl)] border-2 border-[var(--ph-forest)]/15 bg-[var(--ph-forest)]/[0.02] p-8 sm:p-10">
+      <h3>
+        {locale === "uk" ? "Чому варто обрати саме цей проєкт" : "Why choose this project"}
+      </h3>
+      <ul class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {whyChoose.map((item) => (
+          <li class="flex items-center gap-3 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-surface)] px-4 py-3 text-[0.875rem] text-[var(--ph-ink)]">
+            <CheckCircle size={16} class="shrink-0 text-[var(--ph-forest)]" strokeWidth={1.5} />
+            {item}
+          </li>
+        ))}
+      </ul>
+      <div class="mt-8 rounded-[var(--ph-radius-2xl)] bg-[var(--ph-forest)] px-10 py-8 text-center shadow-[0_4px_24px_rgba(45,74,58,0.3)]">
+        <p class="mx-auto max-w-xl text-[1.125rem] font-semibold leading-relaxed text-white">
+          {locale === "uk"
+            ? "Ваш власний будинок у Києві — із комфортом приватного життя, сучасними технологіями та продуманою інфраструктурою."
+            : "Your own house in Kyiv — with the comfort of private living, modern technologies and thoughtful infrastructure."}
+        </p>
       </div>
     </div>
   </div>

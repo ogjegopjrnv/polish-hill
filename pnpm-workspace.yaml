@@ -2,3 +2,7 @@ packages:
   - "apps/*"
   - "packages/*"
   - "workers/*"
+allowBuilds:
+  bufferutil: true
+  esbuild: true
+  sharp: true

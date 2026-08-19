@@ -27,8 +27,13 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </p>
         <p class="mt-3 text-[var(--ph-ink-soft)]">
           {locale === "uk"
-            ? "Ми не лише показуємо майбутні проєкти — ми можемо показати те, що вже побудували. «Польський куточок» — це наша реалізована робота, яку можна побачити наживо."
-            : "We don't just show future projects — we can show what we've already built. Polish Hill is our completed work you can see in person."}
+            ? "Для нас важливо не просто збудувати будинок, а створити місце, куди хочеться повертатися. Саме таким став «Польський куточок» — проєкт, який сьогодні вже реалізований і є наочним прикладом результату нашої роботи."
+            : "For us, it's important not just to build a house, but to create a place you want to come back to. That's what Polish Hill became — a project that is already completed and serves as a clear example of our work."}
+        </p>
+        <p class="mt-3 text-[var(--ph-ink-soft)]">
+          {locale === "uk"
+            ? "Ми не лише показуємо майбутні проєкти — ми можемо показати те, що вже побудували. «Польський куточок» — це наша реалізована робота, яку можна побачити наживо та оцінити якість будівництва, архітектуру й загальну концепцію."
+            : "We don't just show future projects — we can show what we've already built. Polish Hill is our completed work you can see in person and evaluate the quality of construction, architecture and overall concept."}
         </p>
 
         <div class="mt-6 rounded-[var(--ph-radius-lg)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-4">
@@ -43,7 +48,7 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
         </div>
       </div>
 
-      <!-- Image — use existing townhouse photos -->
+      <!-- Image -->
       <div class="reveal" style="transition-delay: 100ms;">
         <div class="overflow-hidden rounded-[var(--ph-radius-2xl)] shadow-[var(--ph-shadow-lg)]">
           <img
