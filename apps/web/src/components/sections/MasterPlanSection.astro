@@ -6,7 +6,7 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
 const floors = [
   { label: locale === "uk" ? "1-й поверх" : "1st floor", src: "/images/client/duplex-floor-1.jpg" },
   { label: locale === "uk" ? "2-й поверх" : "2nd floor", src: "/images/client/duplex-floor-2.jpg" },
-  { label: locale === "uk" ? "3-й поверх" : "3rd floor", src: "/images/client/duplex-floor-3.jpg" },
+  { label: locale === "uk" ? "Мансарда" : "Attic floor", src: "/images/client/duplex-floor-mansarda.jpg" },
 ];
 ---
 
@@ -21,8 +21,8 @@ const floors = [
       </h2>
       <p class="mt-4 text-[var(--ph-ink-soft)]">
         {locale === "uk"
-          ? "195–200 м² на 3 поверхи. Стан після будівельників. Натисніть для збільшення."
-          : "195–200 m² across 3 floors. Shell & core condition. Tap to zoom."}
+          ? "195–200 м²: два поверхи та мансарда. Стан після будівельників. Натисніть для збільшення."
+          : "195–200 m²: two floors plus attic. Shell & core condition. Tap to zoom."}
       </p>
     </div>
 

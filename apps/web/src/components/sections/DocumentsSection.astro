@@ -1,0 +1,59 @@
+---
+import { FileText, Download } from "lucide-astro";
+import type { Locale } from "@lib/i18n/translations";
+
+const locale = (Astro.currentLocale ?? "uk") as Locale;
+
+const documents = [
+  { num: "ІУ051260808486", file: "/docs/polish-hill-permit-1.pdf" },
+  { num: "ІУ051260808498", file: "/docs/polish-hill-permit-2.pdf" },
+  { num: "ІУ051260808875", file: "/docs/polish-hill-permit-3.pdf" },
+  { num: "ІУ051260808931", file: "/docs/polish-hill-permit-4.pdf" },
+];
+---
+
+<section id="documents" class="section bg-[var(--ph-bg)]">
+  <div class="container-ph">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-[var(--ph-forest)]">
+        {locale === "uk" ? "Документи" : "Documents"}
+      </span>
+      <h2 class="mt-3">
+        {locale === "uk" ? "Будуємо офіційно" : "Building officially"}
+      </h2>
+      <p class="mt-4 text-[var(--ph-ink-soft)]">
+        {locale === "uk"
+          ? "Будівельні роботи зареєстровано в Державній інспекції архітектури та містобудування України (ДІАМ) 13 серпня 2026 року — окремий дозвільний документ на кожну секцію. Повні документи доступні для завантаження."
+          : "Construction works are registered with the State Inspection of Architecture and Urban Planning of Ukraine (Aug 13, 2026) — a separate permit document for each section. Full documents are available for download."}
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {documents.map(({ num, file }, idx) => (
+        <a
+          href={file}
+          target="_blank"
+          rel="noopener"
+          class="reveal group flex flex-col gap-4 rounded-[var(--ph-radius-xl)] border border-[var(--ph-border)] bg-[var(--ph-surface)] p-6 shadow-[var(--ph-shadow-sm)] transition-all hover:-translate-y-1 hover:shadow-[var(--ph-shadow-lg)]"
+          style={`transition-delay: ${idx * 80}ms;`}
+        >
+          <span class="flex h-11 w-11 items-center justify-center rounded-[var(--ph-radius-md)] bg-[var(--ph-forest)]/10 text-[var(--ph-forest)]">
+            <FileText class="h-5 w-5" stroke-width={1.75} />
+          </span>
+          <span>
+            <span class="block text-[0.9375rem] font-semibold text-[var(--ph-ink)]">
+              {locale === "uk"
+                ? "Повідомлення про початок будівельних робіт"
+                : "Notice of commencement of construction"}
+            </span>
+            <span class="mt-1 block break-all text-[0.75rem] text-[var(--ph-ink-muted)]">№ {num}</span>
+          </span>
+          <span class="mt-auto flex items-center gap-1.5 text-[0.8125rem] font-medium text-[var(--ph-forest)]">
+            <Download class="h-4 w-4" stroke-width={2} />
+            {locale === "uk" ? "Завантажити PDF" : "Download PDF"}
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

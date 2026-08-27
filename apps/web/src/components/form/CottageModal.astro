@@ -62,7 +62,7 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
             </div>
             <div class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] py-1.5">
               <p id="cottage-modal-floors" class="tabular-nums text-[0.8125rem] font-bold"></p>
-              <p class="text-[0.5rem] text-[var(--ph-ink-muted)]">{locale === "uk" ? "пов." : "fl."}</p>
+              <p class="text-[0.5rem] text-[var(--ph-ink-muted)]">{locale === "uk" ? "пов. + мансарда" : "fl. + attic"}</p>
             </div>
             <div class="rounded-[var(--ph-radius-md)] bg-[var(--ph-bg)] py-1.5">
               <p id="cottage-modal-ceiling" class="tabular-nums text-[0.8125rem] font-bold"></p>
@@ -136,7 +136,7 @@ const availableLots = lots.filter((l) => l.status === "available" || l.status ==
     const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
     document.getElementById("cottage-modal-price")!.textContent = fmt(lot.totalPrice);
     document.getElementById("cottage-modal-area")!.textContent = String(lot.area);
-    document.getElementById("cottage-modal-floors")!.textContent = String(lot.floors);
+    document.getElementById("cottage-modal-floors")!.textContent = "2";
     document.getElementById("cottage-modal-ceiling")!.textContent = String(lot.ceilingHeight);
 
     const featContainer = document.getElementById("cottage-modal-features")!;

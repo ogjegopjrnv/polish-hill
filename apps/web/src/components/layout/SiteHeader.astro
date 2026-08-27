@@ -7,11 +7,11 @@ const locale = (Astro.currentLocale ?? "uk") as Locale;
 const i = t(locale);
 
 const navItems = [
+  { label: i.nav.documents, href: "#documents" },
   { label: i.nav.lots, href: "#cottages" },
   { label: i.nav.masterPlan, href: "#masterplan" },
   { label: i.nav.location, href: "#location" },
   { label: i.nav.finance, href: "#finance" },
-  { label: i.nav.about, href: "#about" },
   { label: i.nav.contact, href: "#contact" },
 ];
 ---

@@ -11,5 +11,6 @@ screenshots/
 # Client raw materials (originals)
 Матеріали від клієнта для сайту/
 *.pdf
+!apps/web/public/docs/*.pdf
 SKILL.md
 .vercel

@@ -1,10 +1,12 @@
 export const translations = {
   uk: {
     nav: {
+      documents: "Документи",
       lots: "Дуплекси",
       masterPlan: "Планування",
       location: "Локація",
       finance: "Фінанси",
+      progress: "Хід робіт",
       about: "Про нас",
       contact: "Контакти",
     },
@@ -35,10 +37,12 @@ export const translations = {
   },
   en: {
     nav: {
+      documents: "Documents",
       lots: "Duplexes",
       masterPlan: "Floor Plans",
       location: "Location",
       finance: "Finance",
+      progress: "Progress",
       about: "About",
       contact: "Contact",
     },
